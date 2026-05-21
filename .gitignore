@@ -1,0 +1,72 @@
+# Xcode
+## User settings
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+
+## Project-local settings shouldn't be committed (use shared scheme instead)
+*.xcscmblueprint
+*.xccheckout
+
+## Build artifacts
+build/
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Swift Package Manager
+.swiftpm/
+.build/
+Packages/
+Package.pins
+Package.resolved
+
+## CocoaPods
+Pods/
+Podfile.lock
+
+## Carthage
+Carthage/Build/
+
+## fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+## Bundler (for fastlane)
+.bundle/
+vendor/bundle/
+
+# Firebase
+GoogleService-Info.plist.example
+# Note: keep real GoogleService-Info.plist out of repo only if it contains secrets;
+# for client config files, Firebase generally allows committing them.
+
+# Secrets / credentials
+*.p12
+*.cer
+*.mobileprovision
+*.entitlements.bak
+secrets.xcconfig
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs
+*.log
