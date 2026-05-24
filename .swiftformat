@@ -1,0 +1,20 @@
+# SwiftFormat configuration for submil
+# Run: swiftformat .
+# Install: brew install swiftformat
+
+--swiftversion 5.10
+--indent 4
+--maxwidth 140
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--commas inline
+--trimwhitespace always
+--semicolons never
+--header strip
+--self remove
+--importgrouping testable-bottom
+--ranges no-space
+--operatorfunc spaced
+--elseposition same-line
+--guardelse next-line
