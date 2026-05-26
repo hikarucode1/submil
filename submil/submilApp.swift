@@ -1,32 +1,28 @@
-//
-//  submilApp.swift
-//  submil
-//
-//  Created by 渡邊光 on 2026/05/25.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct submilApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    let modelContainer: ModelContainer
 
+    init() {
+        let schema = Schema([
+            Subscription.self,
+            UsageEvaluation.self,
+            CancellationLog.self,
+        ])
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            modelContainer = try ModelContainer(for: schema, configurations: [configuration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(modelContainer)
     }
 }
