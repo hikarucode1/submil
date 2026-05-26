@@ -64,4 +64,9 @@ extension Subscription {
     var latestRecommendation: EvaluationResult? {
         evaluations.sorted { $0.evaluatedAt > $1.evaluatedAt }.first?.result
     }
+
+    /// 次回引落日 (今日以降で最も近い billingDay)
+    var nextBillingDate: Date {
+        Date.nextBillingDate(cycle: billingCycle, day: billingDay)
+    }
 }
