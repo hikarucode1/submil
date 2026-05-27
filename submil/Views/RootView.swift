@@ -1,6 +1,9 @@
 import SwiftUI
+import SwiftData
 
 struct RootView: View {
+    @Environment(\.modelContext) private var modelContext
+
     var body: some View {
         TabView {
             HomeTab()
@@ -15,10 +18,19 @@ struct RootView: View {
             SettingsTab()
                 .tabItem { Label("設定", systemImage: "gearshape.fill") }
         }
+        .task {
+            #if DEBUG
+            SampleData.seed(into: modelContext)
+            #endif
+        }
     }
 }
 
 private struct HomeTab: View {
+    @Query private var subscriptions: [Subscription]
+    @Query private var evaluations: [UsageEvaluation]
+    @Query private var cancellations: [CancellationLog]
+
     var body: some View {
         NavigationStack {
             ContentUnavailableView(
@@ -27,6 +39,14 @@ private struct HomeTab: View {
                 description: Text("サブスク一覧と月額合計を表示します (実装予定)")
             )
             .navigationTitle("サブミル")
+            #if DEBUG
+            .safeAreaInset(edge: .bottom) {
+                Text("DEBUG: subs=\(subscriptions.count) / evals=\(evaluations.count) / cancels=\(cancellations.count)")
+                    .font(.caption.monospaced())
+                    .foregroundStyle(.secondary)
+                    .padding(8)
+            }
+            #endif
         }
     }
 }

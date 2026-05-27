@@ -23,6 +23,7 @@ enum SampleData {
             billingDay: 1,
             category: .music
         )
+        spotify.isActive = false  // CancellationLog と整合
         context.insert(netflix)
         context.insert(spotify)
 
