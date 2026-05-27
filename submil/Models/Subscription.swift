@@ -65,8 +65,8 @@ extension Subscription {
         evaluations.sorted { $0.evaluatedAt > $1.evaluatedAt }.first?.result
     }
 
-    /// 次回引落日 (今日以降で最も近い billingDay)
+    /// 次回引落日 (startedAt を起点に cycle 加算した対象月の billingDay)
     var nextBillingDate: Date {
-        Date.nextBillingDate(cycle: billingCycle, day: billingDay)
+        Date.nextBillingDate(cycle: billingCycle, day: billingDay, startedAt: startedAt)
     }
 }
