@@ -106,9 +106,10 @@ import Testing
         assertYMD(result, 2027, 3, 5)
     }
 
-    // MARK: - 月末 / うるう年 繰り越し
+    // MARK: - 月末 / うるう年 クランプ
 
-    @Test func monthlyDay31InFebruaryRollsOverToMarch31() {
+    @Test func monthlyDay31InFebruaryClampsToFeb28() {
+        // 2026 は平年 → 2 月に 31 日が無いので月末 2/28 にクランプ
         let result = Date.nextBillingDate(
             cycle: .monthly,
             day: 31,
@@ -116,7 +117,19 @@ import Testing
             from: date(2026, 2, 1),
             calendar: calendar
         )
-        assertYMD(result, 2026, 3, 31)
+        assertYMD(result, 2026, 2, 28)
+    }
+
+    @Test func monthlyDay31InLeapFebruaryClampsToFeb29() {
+        // 2024 はうるう年 → 月末 2/29 にクランプ
+        let result = Date.nextBillingDate(
+            cycle: .monthly,
+            day: 31,
+            startedAt: date(2024, 1, 31),
+            from: date(2024, 2, 1),
+            calendar: calendar
+        )
+        assertYMD(result, 2024, 2, 29)
     }
 
     @Test func monthlyDay29InLeapYearReturnsFeb29() {
@@ -131,8 +144,8 @@ import Testing
         assertYMD(result, 2024, 2, 29)
     }
 
-    @Test func monthlyDay29InNonLeapYearRollsToMarch29() {
-        // 2025 は平年 → 2/29 が無く 3/29 に繰り越し
+    @Test func monthlyDay29InNonLeapYearClampsToFeb28() {
+        // 2025 は平年 → 2/29 が無く月末 2/28 にクランプ
         let result = Date.nextBillingDate(
             cycle: .monthly,
             day: 29,
@@ -140,19 +153,19 @@ import Testing
             from: date(2025, 2, 1),
             calendar: calendar
         )
-        assertYMD(result, 2025, 3, 29)
+        assertYMD(result, 2025, 2, 28)
     }
 
-    @Test func yearlyDay29StartedOnLeapDayRollsToMarch29InNonLeapYear() {
-        // startedAt=2024/2/29 (うるう日)、from=2025/3/1 → 2025/2/29 は無いので 2025/3/29 に繰り越し
+    @Test func yearlyDay29StartedOnLeapDayClampsToFeb28InNonLeapYear() {
+        // startedAt=2024/2/29 (うるう日)、毎年 2 月。from=2025/1/1 → 平年 2025 は 2/29 が無く月末 2/28 にクランプ
         let result = Date.nextBillingDate(
             cycle: .yearly,
             day: 29,
             startedAt: date(2024, 2, 29),
-            from: date(2025, 3, 1),
+            from: date(2025, 1, 1),
             calendar: calendar
         )
-        assertYMD(result, 2025, 3, 29)
+        assertYMD(result, 2025, 2, 28)
     }
 
     // MARK: - day バリデーション (クランプ)

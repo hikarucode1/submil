@@ -4,7 +4,7 @@ extension Date {
     /// referenceDate より厳密に後で、最も近い「次回引落日」を返す。
     ///
     /// - `startedAt` の年月を起点に cycle (monthly=1 / quarterly=3 / yearly=12 か月) ずつ進めた対象月の `day` を候補とする。
-    /// - 対象月に該当日がない場合 (例: 2 月 31 日) は翌月へ繰り越す (Issue #7 の方針)。
+    /// - 対象月に該当日がない場合 (例: 2 月 31 日) は当月末にクランプ (例: 2/28 or 2/29)。実際のサブスク課金の月末挙動に合わせる。
     /// - referenceDate と一致する候補は採用しない (strictly-after)。
     /// - `day` は 1...31 にクランプ。
     static func nextBillingDate(
@@ -42,7 +42,7 @@ extension Date {
         return referenceDate
     }
 
-    /// `targetMonth` の年月で `day` の日付を返す。月内に該当日がなければ翌月の `day` に繰り越す。
+    /// `targetMonth` の年月で `day` の日付を返す。月内に該当日がなければ当月末にクランプする。
     private static func billingDate(in targetMonth: Date, day: Int, calendar: Calendar) -> Date {
         let comps = calendar.dateComponents([.year, .month], from: targetMonth)
         guard let year = comps.year, let month = comps.month else { return targetMonth }
@@ -51,9 +51,12 @@ extension Date {
            calendar.component(.day, from: direct) == day {
             return direct
         }
-        let nextMonth = month == 12 ? 1 : month + 1
-        let nextYear  = month == 12 ? year + 1 : year
-        return calendar.date(from: DateComponents(year: nextYear, month: nextMonth, day: day))
-            ?? targetMonth
+        // 該当日が月内に無い場合は当月末日にクランプ (例: 2 月 31 日 → 2/28 or 2/29)
+        guard let firstOfMonth = calendar.date(from: DateComponents(year: year, month: month, day: 1)),
+              let dayRange = calendar.range(of: .day, in: .month, for: firstOfMonth),
+              let lastDay = dayRange.last,
+              let clamped = calendar.date(from: DateComponents(year: year, month: month, day: lastDay))
+        else { return targetMonth }
+        return clamped
     }
 }
