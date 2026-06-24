@@ -13,6 +13,7 @@ struct HomeView: View {
     @AppStorage("home.filter") private var filterRaw = ""  // "" = すべて
 
     @State private var showingAdd = false
+    @State private var pendingDeletion: Subscription?
 
     private var sort: HomeSortOption {
         HomeSortOption(rawValue: sortRaw) ?? .amountDescending
@@ -44,7 +45,7 @@ struct HomeView: View {
         NavigationStack {
             Group {
                 if activeSubscriptions.isEmpty {
-                    EmptyStateView(onAdd: { showingAdd = true })
+                    EmptyStateView(totalAnnualSaving: totalAnnualSaving, onAdd: { showingAdd = true })
                 } else {
                     contentList
                 }
@@ -91,7 +92,7 @@ struct HomeView: View {
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                delete(subscription)
+                                pendingDeletion = subscription
                             } label: {
                                 Label("削除", systemImage: "trash")
                             }
@@ -100,6 +101,23 @@ struct HomeView: View {
                 }
             }
         }
+        .confirmationDialog(
+            "このサブスクを削除しますか?",
+            isPresented: deletionDialogBinding,
+            presenting: pendingDeletion
+        ) { subscription in
+            Button("削除", role: .destructive) { delete(subscription) }
+            Button("キャンセル", role: .cancel) { pendingDeletion = nil }
+        } message: { subscription in
+            Text("「\(subscription.serviceName)」を削除します。元に戻せません。")
+        }
+    }
+
+    private var deletionDialogBinding: Binding<Bool> {
+        Binding(
+            get: { pendingDeletion != nil },
+            set: { if !$0 { pendingDeletion = nil } }
+        )
     }
 
     // MARK: - フィルタ / ソート Menu (#23)
@@ -138,7 +156,7 @@ private struct SummaryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("毎月のサブスク代")
+            Text("毎月のサブスク代 (全体)")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Text("¥\(monthlyTotal.formatted()) / 月")
@@ -182,6 +200,7 @@ private struct SavingsBanner: View {
 // MARK: - 空状態 (#24)
 
 private struct EmptyStateView: View {
+    let totalAnnualSaving: Int
     let onAdd: () -> Void
 
     var body: some View {
@@ -196,6 +215,14 @@ private struct EmptyStateView: View {
                 Label("サブスクを追加", systemImage: "plus")
             }
             .buttonStyle(.borderedProminent)
+
+            // 全て解約済みでも、これまでの累計節約額は祝う (#21 を空状態でも表示)
+            if totalAnnualSaving > 0 {
+                Text("これまで ¥\(totalAnnualSaving.formatted()) 節約しました 🎉")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 4)
+            }
         }
     }
 }
