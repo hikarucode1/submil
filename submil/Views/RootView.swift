@@ -6,7 +6,7 @@ struct RootView: View {
 
     var body: some View {
         TabView {
-            HomeTab()
+            HomeView()
                 .tabItem { Label("ホーム", systemImage: "house.fill") }
 
             StudentPlansTab()
@@ -21,43 +21,6 @@ struct RootView: View {
         .task {
             #if DEBUG
             SampleData.seed(into: modelContext)
-            #endif
-        }
-    }
-}
-
-private struct HomeTab: View {
-    @Query private var subscriptions: [Subscription]
-    @Query private var evaluations: [UsageEvaluation]
-    @Query private var cancellations: [CancellationLog]
-
-    @State private var showingAdd = false
-
-    var body: some View {
-        NavigationStack {
-            ContentUnavailableView(
-                "ホーム",
-                systemImage: "list.bullet.rectangle",
-                description: Text("サブスク一覧と月額合計を表示します (実装予定)")
-            )
-            .navigationTitle("サブミル")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button { showingAdd = true } label: {
-                        Label("サブスクを追加", systemImage: "plus")
-                    }
-                }
-            }
-            .sheet(isPresented: $showingAdd) {
-                AddSubscriptionView()
-            }
-            #if DEBUG
-            .safeAreaInset(edge: .bottom) {
-                Text("DEBUG: subs=\(subscriptions.count) / evals=\(evaluations.count) / cancels=\(cancellations.count)")
-                    .font(.caption.monospaced())
-                    .foregroundStyle(.secondary)
-                    .padding(8)
-            }
             #endif
         }
     }
