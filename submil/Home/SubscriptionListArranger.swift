@@ -50,12 +50,17 @@ enum SubscriptionListArranger {
                 return lhs.serviceName < rhs.serviceName
             }
         case .billingDate:
-            return filtered.sorted { lhs, rhs in
-                if lhs.nextBillingDate != rhs.nextBillingDate {
-                    return lhs.nextBillingDate < rhs.nextBillingDate
+            // nextBillingDate は内部で日付計算ループを回すため、比較ごとの再評価を避け
+            // 一度だけ算出してからソートする (decorate-sort-undecorate)。
+            return filtered
+                .map { ($0, $0.nextBillingDate) }
+                .sorted { lhs, rhs in
+                    if lhs.1 != rhs.1 {
+                        return lhs.1 < rhs.1
+                    }
+                    return lhs.0.serviceName < rhs.0.serviceName
                 }
-                return lhs.serviceName < rhs.serviceName
-            }
+                .map(\.0)
         }
     }
 }
