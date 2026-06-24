@@ -49,7 +49,6 @@ struct AddSubscriptionView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") { save() }
-                        .disabled(!isSaveable)
                 }
             }
             .task { catalog = ServiceCatalog.loadBundled() }
@@ -68,6 +67,12 @@ struct AddSubscriptionView: View {
             TextField("サービス名", text: $serviceName)
                 .focused($focusedField, equals: .serviceName)
                 .submitLabel(.next)
+                .onChange(of: serviceName) { _, newValue in
+                    // サジェスト選択後に手編集したら master 紐付けをクリア
+                    if newValue != lastSelectedName {
+                        masterServiceId = nil
+                    }
+                }
         }
     }
 
@@ -90,7 +95,7 @@ struct AddSubscriptionView: View {
 
     private var detailSection: some View {
         Section("詳細") {
-            AmountField(amountText: $amountText, focus: $focusedField)
+            AmountField(amountText: $amountText, cycle: billingCycle, focus: $focusedField)
 
             Picker("請求サイクル", selection: $billingCycle) {
                 ForEach(BillingCycle.allCases, id: \.self) { cycle in
@@ -114,12 +119,6 @@ struct AddSubscriptionView: View {
     }
 
     // MARK: - Logic
-
-    private var isSaveable: Bool {
-        SubscriptionInputValidator.isValid(
-            serviceName: serviceName, amount: amountValue, billingDay: billingDay
-        )
-    }
 
     private var alertBinding: Binding<Bool> {
         Binding(
@@ -169,18 +168,24 @@ struct AddSubscriptionView: View {
 // MARK: - 金額入力 (#14)
 
 /// 数値のみ受付・3桁区切り表示・¥ プレフィックスの金額フィールド。
+/// ラベルは請求サイクルに応じて「金額 (月額/3ヶ月/年額)」と動的に変わる。
+/// amount は Subscription のサイクル単位請求額なので、サイクルとラベルを一致させ誤入力を防ぐ。
 private struct AmountField: View {
     @Binding var amountText: String
+    let cycle: BillingCycle
     var focus: FocusState<SubscriptionInputField?>.Binding
+
+    /// 1円〜9桁 (約10億) まで。これを超える桁は受け付けない。
+    private static let maxDigits = 9
 
     var body: some View {
         HStack {
             Text("¥").foregroundStyle(.secondary)
-            TextField("金額 (月額)", text: $amountText)
+            TextField("金額 (\(cycle.displayName))", text: $amountText)
                 .keyboardType(.numberPad)
                 .focused(focus, equals: .amount)
                 .onChange(of: amountText) { _, newValue in
-                    let digits = newValue.filter(\.isNumber)
+                    let digits = String(newValue.filter(\.isNumber).prefix(Self.maxDigits))
                     let grouped = (Int(digits)?.formatted(.number.grouping(.automatic))) ?? ""
                     if grouped != amountText {
                         amountText = grouped
