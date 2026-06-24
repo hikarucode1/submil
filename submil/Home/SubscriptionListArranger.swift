@@ -60,7 +60,7 @@ enum SubscriptionListArranger {
                     }
                     return lhs.0.serviceName < rhs.0.serviceName
                 }
-                .map(\.0)
+                .map { $0.0 }
         }
     }
 }
