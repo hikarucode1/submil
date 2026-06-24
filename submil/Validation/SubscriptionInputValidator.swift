@@ -1,7 +1,7 @@
 import Foundation
 
-/// 追加画面の入力フィールド。エラー時のフォーカス対象に使う。
-enum SubscriptionInputField: Equatable {
+/// 追加画面の入力フィールド。エラー時のフォーカス対象 (@FocusState) に使う。
+enum SubscriptionInputField: Hashable {
     case serviceName
     case amount
     case billingDay

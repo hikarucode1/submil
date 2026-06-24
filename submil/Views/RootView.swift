@@ -31,6 +31,8 @@ private struct HomeTab: View {
     @Query private var evaluations: [UsageEvaluation]
     @Query private var cancellations: [CancellationLog]
 
+    @State private var showingAdd = false
+
     var body: some View {
         NavigationStack {
             ContentUnavailableView(
@@ -39,6 +41,16 @@ private struct HomeTab: View {
                 description: Text("サブスク一覧と月額合計を表示します (実装予定)")
             )
             .navigationTitle("サブミル")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button { showingAdd = true } label: {
+                        Label("サブスクを追加", systemImage: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAdd) {
+                AddSubscriptionView()
+            }
             #if DEBUG
             .safeAreaInset(edge: .bottom) {
                 Text("DEBUG: subs=\(subscriptions.count) / evals=\(evaluations.count) / cancels=\(cancellations.count)")
