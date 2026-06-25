@@ -162,6 +162,21 @@ enum EvaluationResult: String, Codable {
     }
 }
 
+/// 解約手順の難易度 (cancellation-guides.json の `difficulty`)。
+enum GuideDifficulty: String, Codable, CaseIterable {
+    case easy
+    case medium
+    case hard
+
+    var label: String {
+        switch self {
+        case .easy:   return "かんたん"
+        case .medium: return "ふつう"
+        case .hard:   return "やや手間"
+        }
+    }
+}
+
 enum CancellationReason: String, Codable, CaseIterable {
     case unused
     case tooExpensive
