@@ -131,6 +131,27 @@ enum EvaluationResult: String, Codable {
         }
     }
 
+    /// 結果画面の見出し (#32)
+    var headline: String {
+        switch self {
+        case .keep:       return "今のままでOK"
+        case .reconsider: return "ちょっと見直してみる?"
+        case .cancel:     return "解約を検討しよう"
+        }
+    }
+
+    /// 結果画面のアドバイス文 (#32)
+    var advice: String {
+        switch self {
+        case .keep:
+            return "しっかり使えています。コスパは良好。このまま継続しましょう。"
+        case .reconsider:
+            return "使用頻度がやや低めです。本当に必要か、もっと安いプランがないか見直してみましょう。"
+        case .cancel:
+            return "ほとんど使えていないようです。解約すれば固定費をぐっと減らせます。"
+        }
+    }
+
     /// SwiftUI Color の名称。View 側で `Color` にマップする
     var colorName: String {
         switch self {
