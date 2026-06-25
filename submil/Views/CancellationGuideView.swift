@@ -149,7 +149,7 @@ struct CancellationGuideView: View {
         subscription.isActive = false
         subscription.updatedAt = .now
         modelContext.insert(CancellationLog(from: subscription, reason: reason))
-        showingReasonSheet = false
+        // sheet はこの画面の dismiss() に伴って自動的に閉じる (二重アニメ回避のため明示クローズしない)。
         dismiss()
     }
 }

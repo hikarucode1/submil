@@ -75,4 +75,25 @@ import Testing
         #expect(decoded.steps.first?.text == "amazon.co.jp にログイン")
         #expect(decoded.appStoreNote == nil)
     }
+
+    // MARK: - バンドル整合 (serviceId ドリフト検知)
+
+    /// バンドル同梱の全ガイドの `serviceId` が services.json の id に存在することを保証する。
+    /// どちらかがドリフトすると実機で黙って fallbackCard に劣化するため、不変条件として固定する。
+    /// テストはアプリにホスト (TEST_HOST = submil.app) されるため Bundle.main で両 JSON を解決できる。
+    @Test func bundledGuideServiceIdsExistInServiceCatalog() {
+        let guides = CancellationGuideCatalog.loadBundled()
+        let services = ServiceCatalog.loadBundled()
+
+        #expect(!guides.isEmpty)
+        #expect(!services.isEmpty)
+
+        let serviceIds = Set(services.map(\.id))
+        for guide in guides {
+            #expect(
+                serviceIds.contains(guide.serviceId),
+                "ガイド '\(guide.id)' の serviceId '\(guide.serviceId)' が services.json に存在しません"
+            )
+        }
+    }
 }
