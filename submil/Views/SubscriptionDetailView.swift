@@ -15,6 +15,9 @@ struct SubscriptionDetailView: View {
             }
             basicInfoSection
             evaluateSection
+            if subscription.isActive {
+                cancellationSection
+            }
             if !subscription.evaluations.isEmpty {
                 historySection
             }
@@ -72,6 +75,22 @@ struct SubscriptionDetailView: View {
                     subscription.evaluations.isEmpty ? "「これ要る?」を評価する" : "もう一度評価する",
                     systemImage: "checklist"
                 )
+            }
+        }
+    }
+
+    /// 解約ガイドへの導線 (#36)。解約推奨のときは強調表示する。
+    private var cancellationSection: some View {
+        Section {
+            NavigationLink {
+                CancellationGuideView(subscription: subscription)
+            } label: {
+                Label("解約ガイドを見る", systemImage: "scissors")
+                    .foregroundStyle(subscription.latestRecommendation == .cancel ? Color.red : Color.primary)
+            }
+        } footer: {
+            if subscription.latestRecommendation == .cancel {
+                Text("解約推奨です。手順を確認して固定費を見直しましょう。")
             }
         }
     }

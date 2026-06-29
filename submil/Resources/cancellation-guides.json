@@ -1,0 +1,160 @@
+{
+  "version": "2026-05-21",
+  "_note": "解約手順は各サービスの公式情報を元に作成。サービス側のUI変更で陳腐化する可能性あるため、定期的に確認・更新が必要。App Store経由で課金した場合は iOS の「設定 > Apple ID > サブスクリプション」から解約するケースが多いことも併記",
+  "guides": [
+    {
+      "id": "spotify-cancel",
+      "serviceId": "spotify",
+      "serviceName": "Spotify",
+      "difficulty": "easy",
+      "estimatedMinutes": 2,
+      "steps": [
+        { "order": 1, "text": "ブラウザで spotify.com にログイン" },
+        { "order": 2, "text": "右上のプロフィール → 「アカウント」を開く" },
+        { "order": 3, "text": "「サブスクリプションを変更する」をタップ" },
+        { "order": 4, "text": "「キャンセル」を選択し、確認画面で再度「キャンセル」" }
+      ],
+      "appStoreNote": "iOSアプリ内課金で契約した場合は「設定 > Apple ID > サブスクリプション」から解約",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "netflix-cancel",
+      "serviceId": "netflix",
+      "serviceName": "Netflix",
+      "difficulty": "easy",
+      "estimatedMinutes": 2,
+      "steps": [
+        { "order": 1, "text": "ブラウザまたはアプリで netflix.com にログイン" },
+        { "order": 2, "text": "右上のプロフィール → 「アカウント」" },
+        { "order": 3, "text": "「メンバーシップのキャンセル」をタップ" },
+        { "order": 4, "text": "「キャンセル手続きの完了」をタップ" }
+      ],
+      "appStoreNote": "iTunes 経由で契約していた場合は「設定 > Apple ID > サブスクリプション」から解約",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "amazon-prime-cancel",
+      "serviceId": "amazon-prime",
+      "serviceName": "Amazon Prime",
+      "difficulty": "medium",
+      "estimatedMinutes": 5,
+      "steps": [
+        { "order": 1, "text": "amazon.co.jp にログイン" },
+        { "order": 2, "text": "「アカウント&リスト」→「プライム会員情報の管理」" },
+        { "order": 3, "text": "「会員資格を終了する」を選択" },
+        { "order": 4, "text": "引き止め画面で「特典と会員資格を終了」を選択 (複数画面続く)" },
+        { "order": 5, "text": "「特典と会員資格を終了」最終確認まで進む" }
+      ],
+      "appStoreNote": null,
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "apple-music-cancel",
+      "serviceId": "apple-music",
+      "serviceName": "Apple Music",
+      "difficulty": "easy",
+      "estimatedMinutes": 1,
+      "steps": [
+        { "order": 1, "text": "iPhone の「設定」を開く" },
+        { "order": 2, "text": "一番上の自分の名前 (Apple ID) をタップ" },
+        { "order": 3, "text": "「サブスクリプション」を選択" },
+        { "order": 4, "text": "「Apple Music メンバーシップ」→「サブスクリプションをキャンセル」" }
+      ],
+      "appStoreNote": "Apple Music は基本的に App Store 契約のため iOS 設定から解約",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "youtube-premium-cancel",
+      "serviceId": "youtube-premium",
+      "serviceName": "YouTube Premium",
+      "difficulty": "easy",
+      "estimatedMinutes": 2,
+      "steps": [
+        { "order": 1, "text": "ブラウザで youtube.com を開きログイン" },
+        { "order": 2, "text": "右上のプロフィール → 「購入とメンバーシップ」" },
+        { "order": 3, "text": "「YouTube Premium」セクションの「無効にする」" },
+        { "order": 4, "text": "「キャンセル」を選択" }
+      ],
+      "appStoreNote": "iOSアプリ経由で登録した場合は「設定 > Apple ID > サブスクリプション」から解約",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "adobe-cancel",
+      "serviceId": "adobe-cc",
+      "serviceName": "Adobe Creative Cloud",
+      "difficulty": "hard",
+      "estimatedMinutes": 10,
+      "steps": [
+        { "order": 1, "text": "account.adobe.com にログイン" },
+        { "order": 2, "text": "「プラン」セクションで該当プランの「プランを管理」" },
+        { "order": 3, "text": "「プランをキャンセル」を選択" },
+        { "order": 4, "text": "解約理由を選択 (任意)" },
+        { "order": 5, "text": "**重要:** 年間プラン途中解約は早期解約料 (残期間の50%) が発生する場合あり" },
+        { "order": 6, "text": "確認後「キャンセルを確定」" }
+      ],
+      "appStoreNote": null,
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "disney-plus-cancel",
+      "serviceId": "disney-plus",
+      "serviceName": "Disney+",
+      "difficulty": "easy",
+      "estimatedMinutes": 3,
+      "steps": [
+        { "order": 1, "text": "disneyplus.com にブラウザでログイン (アプリからは解約できない場合あり)" },
+        { "order": 2, "text": "右上のプロフィール → 「アカウント」" },
+        { "order": 3, "text": "「サブスクリプション」セクションで「Disney+ Premium 月額プラン」" },
+        { "order": 4, "text": "「サブスクリプションを解約」をタップ → 確認" }
+      ],
+      "appStoreNote": "ドコモ経由・Apple経由・Disney+直接で解約フローが異なる。契約元から手続き",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "chatgpt-plus-cancel",
+      "serviceId": "chatgpt-plus",
+      "serviceName": "ChatGPT Plus",
+      "difficulty": "easy",
+      "estimatedMinutes": 2,
+      "steps": [
+        { "order": 1, "text": "chat.openai.com にログイン" },
+        { "order": 2, "text": "左下の名前 → 「Settings」" },
+        { "order": 3, "text": "「Manage subscription」を選択" },
+        { "order": 4, "text": "Stripe ページで「Cancel plan」を選択" }
+      ],
+      "appStoreNote": "iOSアプリから登録した場合は「設定 > Apple ID > サブスクリプション」から解約",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "u-next-cancel",
+      "serviceId": "u-next",
+      "serviceName": "U-NEXT",
+      "difficulty": "medium",
+      "estimatedMinutes": 4,
+      "steps": [
+        { "order": 1, "text": "ブラウザで unext.jp にログイン (アプリ不可)" },
+        { "order": 2, "text": "「アカウント・契約」→「契約内容の確認・変更」" },
+        { "order": 3, "text": "「月額プラン」→「解約はこちら」" },
+        { "order": 4, "text": "引き止めページで「次へ」→アンケート回答" },
+        { "order": 5, "text": "「同意して解約する」を選択して完了" }
+      ],
+      "appStoreNote": "Apple経由契約の場合は「設定 > Apple ID > サブスクリプション」",
+      "lastVerified": "2026-05-21"
+    },
+    {
+      "id": "icloud-cancel",
+      "serviceId": "icloud-200gb",
+      "serviceName": "iCloud+",
+      "difficulty": "easy",
+      "estimatedMinutes": 1,
+      "steps": [
+        { "order": 1, "text": "iPhone の「設定」を開く" },
+        { "order": 2, "text": "一番上の名前 (Apple ID) → 「iCloud」" },
+        { "order": 3, "text": "「アカウントのストレージを管理」→ 「プランを変更」" },
+        { "order": 4, "text": "「ダウングレードオプション」→ 「無料 (5GB)」を選択" }
+      ],
+      "appStoreNote": "ストレージを使い切ると新規同期が止まるため、容量を整理してから実行",
+      "lastVerified": "2026-05-21"
+    }
+  ]
+}
