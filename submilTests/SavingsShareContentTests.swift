@@ -5,14 +5,16 @@ import Testing
 @Suite struct SavingsShareContentTests {
     // MARK: 金額・見出しの整形
 
+    // 桁区切り文字は端末ロケール依存 ("38,400" / "38.400" 等) のため、
+    // production と同じ `.formatted()` から期待値を導出してロケール非依存にする。
     @Test func amountTextHasYenAndGrouping() {
         let content = SavingsShareContent(totalAnnualSaving: 38400, cancelledCount: 3)
-        #expect(content.amountText == "¥38,400")
+        #expect(content.amountText == "¥\(38400.formatted())")
     }
 
     @Test func headlineEmbedsAmount() {
         let content = SavingsShareContent(totalAnnualSaving: 12000, cancelledCount: 1)
-        #expect(content.headline == "年間 ¥12,000 節約!")
+        #expect(content.headline == "年間 ¥\(12000.formatted()) 節約!")
     }
 
     // MARK: 件数のサブ見出し
@@ -31,7 +33,7 @@ import Testing
 
     @Test func shareTextContainsAmountHashtagAndURL() {
         let content = SavingsShareContent(totalAnnualSaving: 38400, cancelledCount: 3)
-        #expect(content.shareText.contains("¥38,400"))
+        #expect(content.shareText.contains("¥\(38400.formatted())"))
         #expect(content.shareText.contains("#サブミル"))
         #expect(content.shareText.contains(AppLink.appStoreURL.absoluteString))
     }
