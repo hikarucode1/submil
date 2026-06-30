@@ -6,6 +6,9 @@ struct EvaluationResultView: View {
     let result: EvaluationResult
     let onDone: () -> Void
 
+    /// 学割プラン (#42)。reconsider/cancel のとき乗り換え提案として出す。
+    @State private var studentPlan: StudentPlan?
+
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
@@ -31,6 +34,9 @@ struct EvaluationResultView: View {
 
             if result != .keep {
                 savingsHint
+                if let studentPlan {
+                    StudentPlanBanner(plan: studentPlan)
+                }
             }
 
             Spacer()
@@ -43,6 +49,14 @@ struct EvaluationResultView: View {
             .controlSize(.large)
         }
         .padding()
+        .onAppear {
+            // 解約・見直し提案のときだけ学割プランを引く (keep のときは出さない)。
+            guard result != .keep else { return }
+            studentPlan = StudentPlanCatalog.plan(
+                forServiceId: subscription.masterServiceId,
+                in: StudentPlanCatalog.loadBundled()
+            )
+        }
     }
 
     /// 解約した場合の年間節約額。reconsider / cancel のとき行動を後押しする。

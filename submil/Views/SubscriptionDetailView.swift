@@ -7,11 +7,16 @@ struct SubscriptionDetailView: View {
     let subscription: Subscription
 
     @State private var showingEvaluation = false
+    /// 学割プラン (#42)。対応サービスに学割版があれば提案バナーを出す。
+    @State private var studentPlan: StudentPlan?
 
     var body: some View {
         List {
             if let result = subscription.latestRecommendation {
                 recommendationSection(result)
+            }
+            if let studentPlan {
+                studentPlanSection(studentPlan)
             }
             basicInfoSection
             evaluateSection
@@ -32,9 +37,26 @@ struct SubscriptionDetailView: View {
         .sheet(isPresented: $showingEvaluation) {
             EvaluationFlowView(subscription: subscription)
         }
+        .onAppear {
+            studentPlan = StudentPlanCatalog.plan(
+                forServiceId: subscription.masterServiceId,
+                in: StudentPlanCatalog.loadBundled()
+            )
+        }
     }
 
     // MARK: - Sections
+
+    /// 学割提案バナー (#42)。`[PR]` 表記を含むためセクション footer で出典を補足する。
+    private func studentPlanSection(_ plan: StudentPlan) -> some View {
+        Section {
+            StudentPlanBanner(plan: plan)
+                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                .listRowBackground(Color.clear)
+        } footer: {
+            Text("学割プランの提案です。条件・価格は提供元でご確認ください。")
+        }
+    }
 
     private func recommendationSection(_ result: EvaluationResult) -> some View {
         Section {
