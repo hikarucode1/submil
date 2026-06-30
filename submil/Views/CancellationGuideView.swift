@@ -13,6 +13,10 @@ struct CancellationGuideView: View {
     /// バンドルから読み込んだ全ガイド (表示中は不変なので一度だけ読む)。
     @State private var guides: [CancellationGuide] = []
     @State private var showingReasonSheet = false
+    /// 理由 sheet で選択され、sheet クローズ後に解約完了処理へ渡す理由。
+    @State private var pendingReason: CancellationReason?
+    /// 解約完了画面 (#40) に渡すサマリ。非 nil の間 fullScreenCover を表示する。
+    @State private var completion: CancellationSummary?
 
     private var guide: CancellationGuide? {
         CancellationGuideCatalog.guide(forServiceId: subscription.masterServiceId, in: guides)
@@ -42,11 +46,20 @@ struct CancellationGuideView: View {
                 guides = CancellationGuideCatalog.loadBundled()
             }
         }
-        .sheet(isPresented: $showingReasonSheet) {
+        .sheet(isPresented: $showingReasonSheet, onDismiss: confirmPendingCancellation) {
             CancellationReasonSheet { reason in
-                completeCancellation(reason: reason)
+                // 先に sheet を閉じ、onDismiss で解約処理 → 完了画面へ。
+                // (sheet と fullScreenCover の提示が重ならないよう遷移を直列化する)
+                pendingReason = reason
+                showingReasonSheet = false
             }
             .presentationDetents([.medium])
+        }
+        .fullScreenCover(item: $completion) { summary in
+            CancellationCompleteView(serviceName: summary.serviceName, annualSaving: summary.annualSaving) {
+                completion = nil
+                dismiss()
+            }
         }
     }
 
@@ -144,14 +157,29 @@ struct CancellationGuideView: View {
 
     // MARK: - Actions
 
+    /// 理由 sheet クローズ後に呼ばれる。選択済み理由があれば解約を確定し完了画面を出す。
+    private func confirmPendingCancellation() {
+        guard let reason = pendingReason else { return }
+        pendingReason = nil
+        completion = completeCancellation(reason: reason)
+    }
+
     /// 解約完了処理 (#37)。サブスクを非アクティブ化し、記念碑的な CancellationLog を残す。
-    private func completeCancellation(reason: CancellationReason) {
+    /// 完了画面 (#40) 用に節約額サマリを返す。
+    private func completeCancellation(reason: CancellationReason) -> CancellationSummary {
         subscription.isActive = false
         subscription.updatedAt = .now
-        modelContext.insert(CancellationLog(from: subscription, reason: reason))
-        // sheet はこの画面の dismiss() に伴って自動的に閉じる (二重アニメ回避のため明示クローズしない)。
-        dismiss()
+        let log = CancellationLog(from: subscription, reason: reason)
+        modelContext.insert(log)
+        return CancellationSummary(serviceName: subscription.serviceName, annualSaving: log.annualSavingYen)
     }
+}
+
+/// 解約完了画面へ渡す不変サマリ (#40)。fullScreenCover(item:) 用に Identifiable。
+private struct CancellationSummary: Identifiable {
+    let id = UUID()
+    let serviceName: String
+    let annualSaving: Int
 }
 
 private extension GuideDifficulty {
