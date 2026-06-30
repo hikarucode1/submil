@@ -49,12 +49,13 @@ struct EvaluationResultView: View {
             .controlSize(.large)
         }
         .padding()
-        .onAppear {
+        .task {
             // 解約・見直し提案のときだけ学割プランを引く (keep のときは出さない)。
             guard result != .keep else { return }
+            let plans = await StudentPlanCatalog.loadLatest()
             studentPlan = StudentPlanCatalog.plan(
                 forServiceId: subscription.masterServiceId,
-                in: StudentPlanCatalog.loadBundled()
+                in: plans
             )
         }
     }

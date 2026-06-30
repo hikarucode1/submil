@@ -41,9 +41,9 @@ struct CancellationGuideView: View {
         }
         .navigationTitle("解約ガイド")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
+        .task {
             if guides.isEmpty {
-                guides = CancellationGuideCatalog.loadBundled()
+                guides = await CancellationGuideCatalog.loadLatest()
             }
         }
         .sheet(isPresented: $showingReasonSheet, onDismiss: confirmPendingCancellation) {

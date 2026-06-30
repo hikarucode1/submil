@@ -37,10 +37,11 @@ struct SubscriptionDetailView: View {
         .sheet(isPresented: $showingEvaluation) {
             EvaluationFlowView(subscription: subscription)
         }
-        .onAppear {
+        .task {
+            let plans = await StudentPlanCatalog.loadLatest()
             studentPlan = StudentPlanCatalog.plan(
                 forServiceId: subscription.masterServiceId,
-                in: StudentPlanCatalog.loadBundled()
+                in: plans
             )
         }
     }

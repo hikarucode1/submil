@@ -23,6 +23,18 @@ enum CancellationGuideCatalog {
         return payload.guides
     }
 
+    /// 最新のガイドを取得する (#35)。ContentCache 経由でリモート→キャッシュ→バンドルの順に解決し、
+    /// デコードに失敗した場合はバンドル同梱へフォールバックする。
+    static func loadLatest(cache: ContentCache = .shared) async -> [CancellationGuide] {
+        guard
+            let data = await cache.data(for: .cancellationGuides),
+            let payload = try? JSONDecoder().decode(Payload.self, from: data)
+        else {
+            return loadBundled()
+        }
+        return payload.guides
+    }
+
     /// ガイド ID (`MasterService.cancellationGuideId`) で 1 件取得。
     static func guide(forId id: String, in guides: [CancellationGuide]) -> CancellationGuide? {
         guides.first { $0.id == id }

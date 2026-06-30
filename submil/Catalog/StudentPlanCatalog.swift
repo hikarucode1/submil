@@ -24,6 +24,18 @@ enum StudentPlanCatalog {
         return payload.plans
     }
 
+    /// 最新の学割プランを取得する (#35)。ContentCache 経由でリモート→キャッシュ→バンドルの順に解決し、
+    /// デコードに失敗した場合はバンドル同梱へフォールバックする。
+    static func loadLatest(cache: ContentCache = .shared) async -> [StudentPlan] {
+        guard
+            let data = await cache.data(for: .studentPlans),
+            let payload = try? JSONDecoder().decode(Payload.self, from: data)
+        else {
+            return loadBundled()
+        }
+        return payload.plans
+    }
+
     /// プラン ID (`MasterService.studentPlanId`) で 1 件取得。
     static func plan(forId id: String, in plans: [StudentPlan]) -> StudentPlan? {
         plans.first { $0.id == id }
