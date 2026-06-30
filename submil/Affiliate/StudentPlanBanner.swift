@@ -29,9 +29,8 @@ struct StudentPlanBanner: View {
             HStack(spacing: 8) {
                 Image(systemName: "graduationcap.fill")
                     .foregroundStyle(.green)
-                Text(plan.displayLabel)
-                    .font(.subheadline.bold())
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                // [PR] 表記は AffiliateLinkLabel が PR バッジとして強制表示する (#44)。
+                AffiliateLinkLabel(text: plan.displayLabel)
                 Image(systemName: "chevron.right")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
