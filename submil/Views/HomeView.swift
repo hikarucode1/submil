@@ -13,6 +13,7 @@ struct HomeView: View {
     @AppStorage("home.filter") private var filterRaw = ""  // "" = すべて
 
     @State private var showingAdd = false
+    @State private var showingShare = false
     @State private var pendingDeletion: Subscription?
 
     private var sort: HomeSortOption {
@@ -40,12 +41,19 @@ struct HomeView: View {
     private var totalAnnualSaving: Int {
         cancellations.reduce(0) { $0 + $1.annualSavingYen }
     }
+    private var shareContent: SavingsShareContent {
+        SavingsShareContent(totalAnnualSaving: totalAnnualSaving, cancelledCount: cancellations.count)
+    }
 
     var body: some View {
         NavigationStack {
             Group {
                 if activeSubscriptions.isEmpty {
-                    EmptyStateView(totalAnnualSaving: totalAnnualSaving, onAdd: { showingAdd = true })
+                    EmptyStateView(
+                        totalAnnualSaving: totalAnnualSaving,
+                        onAdd: { showingAdd = true },
+                        onShare: { showingShare = true }
+                    )
                 } else {
                     contentList
                 }
@@ -64,6 +72,9 @@ struct HomeView: View {
             .sheet(isPresented: $showingAdd) {
                 AddSubscriptionView()
             }
+            .sheet(isPresented: $showingShare) {
+                SavingsShareView(content: shareContent)
+            }
         }
     }
 
@@ -74,7 +85,10 @@ struct HomeView: View {
             Section {
                 SummaryCard(monthlyTotal: monthlyTotal, yearlyTotal: yearlyTotal)
                 if totalAnnualSaving > 0 {
-                    SavingsBanner(totalAnnualSaving: totalAnnualSaving)
+                    Button { showingShare = true } label: {
+                        SavingsBanner(totalAnnualSaving: totalAnnualSaving)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .listRowSeparator(.hidden)
@@ -189,6 +203,9 @@ private struct SavingsBanner: View {
             Text("¥\(totalAnnualSaving.formatted())")
                 .font(.headline)
                 .monospacedDigit()
+            Image(systemName: "square.and.arrow.up")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
         .padding()
         .background(Color.green.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
@@ -202,6 +219,7 @@ private struct SavingsBanner: View {
 private struct EmptyStateView: View {
     let totalAnnualSaving: Int
     let onAdd: () -> Void
+    let onShare: () -> Void
 
     var body: some View {
         ContentUnavailableView {
@@ -222,6 +240,12 @@ private struct EmptyStateView: View {
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .padding(.top, 4)
+                Button {
+                    onShare()
+                } label: {
+                    Label("節約をシェア", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.bordered)
             }
         }
     }
