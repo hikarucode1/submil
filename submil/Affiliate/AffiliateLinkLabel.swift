@@ -1,15 +1,16 @@
 import SwiftUI
 
 /// 広告 (PR) であることを示すバッジ (#44)。景表法・ステマ規制対応。
-/// 視認しやすいよう塗りつぶしのカプセルで明示する。
+/// 「広告と明瞭に認識できる」開示要件を満たすため、システム反転色
+/// (前景 = 背景色 / 背景 = primary) でライト/ダーク両モードとも高コントラストを担保する。
 struct PRBadge: View {
     var body: some View {
         Text("PR")
-            .font(.caption2.bold())
-            .foregroundStyle(.white)
-            .padding(.horizontal, 6)
+            .font(.caption.bold())
+            .foregroundStyle(Color(.systemBackground))
+            .padding(.horizontal, 7)
             .padding(.vertical, 2)
-            .background(Color.secondary, in: Capsule())
+            .background(Color.primary, in: Capsule())
             .accessibilityLabel("広告")
     }
 }
