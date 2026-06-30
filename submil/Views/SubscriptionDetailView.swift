@@ -37,11 +37,12 @@ struct SubscriptionDetailView: View {
         .sheet(isPresented: $showingEvaluation) {
             EvaluationFlowView(subscription: subscription)
         }
-        .onAppear {
-            studentPlan = StudentPlanCatalog.plan(
-                forServiceId: subscription.masterServiceId,
-                in: StudentPlanCatalog.loadBundled()
-            )
+        .task {
+            // stale-while-revalidate: 同梱を即時反映し、背景でリモート最新へ更新する。
+            let serviceId = subscription.masterServiceId
+            studentPlan = StudentPlanCatalog.plan(forServiceId: serviceId, in: StudentPlanCatalog.loadBundled())
+            let latest = await StudentPlanCatalog.loadLatest()
+            studentPlan = StudentPlanCatalog.plan(forServiceId: serviceId, in: latest)
         }
     }
 

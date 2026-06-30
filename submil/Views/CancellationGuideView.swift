@@ -41,9 +41,11 @@ struct CancellationGuideView: View {
         }
         .navigationTitle("解約ガイド")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
+        .task {
             if guides.isEmpty {
+                // stale-while-revalidate: 同梱を即時表示し、背景でリモート最新へ更新する。
                 guides = CancellationGuideCatalog.loadBundled()
+                guides = await CancellationGuideCatalog.loadLatest()
             }
         }
         .sheet(isPresented: $showingReasonSheet, onDismiss: confirmPendingCancellation) {
