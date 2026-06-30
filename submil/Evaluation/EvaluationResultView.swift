@@ -52,11 +52,11 @@ struct EvaluationResultView: View {
         .task {
             // 解約・見直し提案のときだけ学割プランを引く (keep のときは出さない)。
             guard result != .keep else { return }
-            let plans = await StudentPlanCatalog.loadLatest()
-            studentPlan = StudentPlanCatalog.plan(
-                forServiceId: subscription.masterServiceId,
-                in: plans
-            )
+            // stale-while-revalidate: 同梱を即時反映し、背景でリモート最新へ更新する。
+            let serviceId = subscription.masterServiceId
+            studentPlan = StudentPlanCatalog.plan(forServiceId: serviceId, in: StudentPlanCatalog.loadBundled())
+            let latest = await StudentPlanCatalog.loadLatest()
+            studentPlan = StudentPlanCatalog.plan(forServiceId: serviceId, in: latest)
         }
     }
 

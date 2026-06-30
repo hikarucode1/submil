@@ -67,6 +67,21 @@ import Testing
         #expect(services?.isEmpty == false)
     }
 
+    // MARK: - 壊れたリモート (非 JSON) → 失敗扱いでフォールバック
+
+    @Test func brokenRemoteJSONIsTreatedAsFailureAndNotCached() async {
+        let dir = tempCacheDir()
+        // 200 で返るが JSON ではない → リモート失敗扱い。キャッシュ無のためバンドルへ。
+        let cache = ContentCache(fetcher: MockFetcher(data: Data("not json".utf8)), cacheDirectory: dir)
+        let data = await cache.data(for: .services)
+
+        #expect(data != nil)
+        #expect(data != Data("not json".utf8))
+        // 壊れた応答はディスクに残さない。
+        let cachedFile = dir.appendingPathComponent("services.json")
+        #expect(!FileManager.default.fileExists(atPath: cachedFile.path))
+    }
+
     // MARK: - 非 2xx → フォールバック
 
     @Test func non2xxStatusFallsBackToBundle() async {

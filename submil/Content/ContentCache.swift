@@ -25,6 +25,15 @@ actor ContentCache {
     /// 配信元 (submil-content の GitHub Pages)。
     static let defaultBaseURL = URL(string: "https://hikarucode1.github.io/submil-content/")!
 
+    /// 既定の取得セッション。低速/劣化網でローカル内容のフォールバックが遅れないよう、
+    /// リクエストタイムアウトを短く設定する (既定の 60s を待たない)。
+    static let defaultFetcher: DataFetching = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 8
+        config.waitsForConnectivity = false
+        return URLSession(configuration: config)
+    }()
+
     private let baseURL: URL
     private let fetcher: DataFetching
     private let bundle: Bundle
@@ -34,7 +43,7 @@ actor ContentCache {
 
     init(
         baseURL: URL = ContentCache.defaultBaseURL,
-        fetcher: DataFetching = URLSession.shared,
+        fetcher: DataFetching = ContentCache.defaultFetcher,
         bundle: Bundle = .main,
         fileManager: FileManager = .default,
         cacheDirectory: URL? = nil
@@ -71,7 +80,14 @@ actor ContentCache {
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
             return nil
         }
+        // 壊れた (JSON でない) リモート応答は失敗扱い。キャッシュ汚染と空表示を防ぎ、
+        // ディスクキャッシュ/バンドルへフォールバックさせる。
+        guard isValidJSON(data) else { return nil }
         return data
+    }
+
+    private func isValidJSON(_ data: Data) -> Bool {
+        (try? JSONSerialization.jsonObject(with: data)) != nil
     }
 
     // MARK: - Disk cache (.cachesDirectory)

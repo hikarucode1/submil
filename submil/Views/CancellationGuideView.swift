@@ -43,6 +43,8 @@ struct CancellationGuideView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             if guides.isEmpty {
+                // stale-while-revalidate: 同梱を即時表示し、背景でリモート最新へ更新する。
+                guides = CancellationGuideCatalog.loadBundled()
                 guides = await CancellationGuideCatalog.loadLatest()
             }
         }
