@@ -13,6 +13,9 @@ struct CancellationCompleteView: View {
     @State private var displayedSaving = 0
     @State private var sealVisible = false
 
+    /// Reduce Motion 有効時は祝祭演出 (カウントアップ / バウンス) を抑え、即時表示にする。
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
@@ -20,7 +23,7 @@ struct CancellationCompleteView: View {
             Image(systemName: "checkmark.seal.fill")
                 .font(.system(size: 72))
                 .foregroundStyle(.green)
-                .symbolEffect(.bounce, value: sealVisible)
+                .symbolEffect(.bounce, value: reduceMotion ? false : sealVisible)
 
             VStack(spacing: 8) {
                 Text("解約完了!")
@@ -44,6 +47,11 @@ struct CancellationCompleteView: View {
         }
         .padding()
         .onAppear {
+            guard !reduceMotion else {
+                // Reduce Motion: 転がし演出なしで最終値を即時表示。
+                displayedSaving = annualSaving
+                return
+            }
             sealVisible = true
             // 画面表示が落ち着いてから金額を転がす (少し遅らせて演出を際立たせる)。
             withAnimation(.easeOut(duration: 0.9).delay(0.35)) {
