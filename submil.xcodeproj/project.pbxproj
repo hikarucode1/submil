@@ -400,6 +400,7 @@
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "広告をあなたの興味に合わせて最適化するために使用します。許可しなくてもアプリはそのままご利用いただけます。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,6 +433,7 @@
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "広告をあなたの興味に合わせて最適化するために使用します。許可しなくてもアプリはそのままご利用いただけます。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

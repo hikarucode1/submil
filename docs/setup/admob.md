@@ -31,7 +31,7 @@ Xcode で `submil.xcodeproj` を開き、**File > Add Package Dependencies…**:
 | --- | --- |
 | `GADApplicationIdentifier` | 開発中は `ca-app-pub-3940256099942544~1458002511`(テスト用アプリ ID)。本番は AdMob 発行値 |
 | `SKAdNetworkItems` | Google 提供の SKAdNetwork ID 一覧(下記リンク参照)を配列で追加 |
-| `NSUserTrackingUsageDescription` | ATT 用の説明文(#46 で対応。例: 「広告の最適化のために使用します」) |
+| `NSUserTrackingUsageDescription` | **#46 で対応済み**。pbxproj の `INFOPLIST_KEY_NSUserTrackingUsageDescription` に設定済みなので手動追加は不要。詳細は [att.md](att.md) |
 
 - SKAdNetwork ID 一覧: https://developers.google.com/admob/ios/quick-start#update_your_infoplist
 - テスト広告: https://developers.google.com/admob/ios/test-ads
