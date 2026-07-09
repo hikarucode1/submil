@@ -26,6 +26,7 @@ struct SavingsShareView: View {
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button {
+                    AnalyticsService.log(.shared(cancelledCount: content.cancelledCount))
                     showingActivity = true
                 } label: {
                     Label("シェアする", systemImage: "square.and.arrow.up")

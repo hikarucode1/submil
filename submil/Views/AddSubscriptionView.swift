@@ -161,6 +161,10 @@ struct AddSubscriptionView: View {
         subscription.memo = trimmedMemo.isEmpty ? nil : trimmedMemo
 
         modelContext.insert(subscription)
+        AnalyticsService.log(.subscriptionAdded(
+            category: subscription.category.rawValue,
+            billingCycle: subscription.billingCycle.rawValue
+        ))
         dismiss()
     }
 }
