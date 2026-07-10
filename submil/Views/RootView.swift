@@ -15,7 +15,7 @@ struct RootView: View {
             SavingsTab()
                 .tabItem { Label("節約", systemImage: "yensign.circle.fill") }
 
-            SettingsTab()
+            SettingsView()
                 .tabItem { Label("設定", systemImage: "gearshape.fill") }
         }
         .task {
@@ -48,19 +48,6 @@ private struct SavingsTab: View {
                 description: Text("解約済みサブスクと累計節約額 (実装予定)")
             )
             .navigationTitle("節約")
-        }
-    }
-}
-
-private struct SettingsTab: View {
-    var body: some View {
-        NavigationStack {
-            ContentUnavailableView(
-                "設定",
-                systemImage: "gearshape",
-                description: Text("通知設定・アカウント・このアプリについて (実装予定)")
-            )
-            .navigationTitle("設定")
         }
     }
 }
