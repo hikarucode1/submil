@@ -22,8 +22,15 @@ private struct AdaptiveBannerView: UIViewRepresentable {
     }
 
     func updateUIView(_ banner: BannerView, context: Context) {
+        // 起動直後は scene が foregroundActive 前で rootViewController が nil のことがあるため、
+        // update 側でも補完する (nil のままだと広告タップ/全画面遷移が機能しない)。
+        if banner.rootViewController == nil {
+            banner.rootViewController = Self.rootViewController
+        }
+        // アンカー型アダプティブの再ロードはサイズが実際に変わったとき (=回転など) に限る。
+        // Google のガイドライン上、回転時は新しいサイズで load し直すのが正道。
         let size = adaptiveSize
-        if banner.adSize.size.width != size.size.width {
+        if !banner.adSize.size.equalTo(size.size) {
             banner.adSize = size
             banner.load(Request())
         }
@@ -35,12 +42,12 @@ private struct AdaptiveBannerView: UIViewRepresentable {
     }
 
     /// 現在アクティブな UIWindowScene の rootViewController を解決する。
+    /// 起動直後などで foregroundActive な scene がまだ無い場合は最初の scene にフォールバックする。
     private static var rootViewController: UIViewController? {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first(where: { $0.activationState == .foregroundActive })?
-            .keyWindow?
-            .rootViewController
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first
+        let window = scene?.keyWindow ?? scene?.windows.first
+        return window?.rootViewController
     }
 }
 #endif
@@ -50,18 +57,30 @@ private struct AdaptiveBannerView: UIViewRepresentable {
 /// `GoogleMobileAds` パッケージが未追加の環境では `#if canImport` により空ビューになるため、
 /// SPM パッケージ追加前でもプロジェクトはビルドできる (段階的統合)。
 struct BannerAdContainer: View {
-    /// 標準バナー高さ (50pt)。アダプティブでもおおよそこの高さに収まる。
-    private let bannerHeight: CGFloat = 50
+    #if canImport(GoogleMobileAds)
+    /// アダプティブバナーの実高さ。幅確定後に AdSize から算出する (機種により 50〜90pt 程度)。
+    /// 固定 50pt だと iPad 等で背の高い広告がクリップされるため、SDK の返す高さに追従させる。
+    @State private var bannerHeight: CGFloat = 50
 
     var body: some View {
-        #if canImport(GoogleMobileAds)
         GeometryReader { proxy in
             AdaptiveBannerView(unitID: AdConfig.bannerUnitID, width: proxy.size.width)
                 .frame(width: proxy.size.width, height: bannerHeight)
+                .onAppear { updateHeight(width: proxy.size.width) }
+                .onChange(of: proxy.size.width) { _, newWidth in
+                    updateHeight(width: newWidth)
+                }
         }
         .frame(height: bannerHeight)
-        #else
-        EmptyView()
-        #endif
     }
+
+    private func updateHeight(width: CGFloat) {
+        guard width > 0 else { return }
+        bannerHeight = currentOrientationAnchoredAdaptiveBanner(width: width).size.height
+    }
+    #else
+    var body: some View {
+        EmptyView()
+    }
+    #endif
 }

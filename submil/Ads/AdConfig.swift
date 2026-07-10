@@ -33,7 +33,13 @@ enum AdConfig {
     }
 
     /// 実際に読み込むバナー広告ユニット ID。
+    /// Release でプレースホルダーのままリリースする事故を防ぐため、未差し替えなら即座に落として検知する。
     static var bannerUnitID: String {
-        useTestAds ? testBannerUnitID : productionBannerUnitID
+        guard !useTestAds else { return testBannerUnitID }
+        precondition(
+            !productionBannerUnitID.contains("0000000000000000"),
+            "productionBannerUnitID がプレースホルダーのままです。AdMob 管理画面で発行した本番 ID に差し替えてください (docs/setup/admob.md)。"
+        )
+        return productionBannerUnitID
     }
 }
