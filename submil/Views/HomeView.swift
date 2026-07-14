@@ -75,6 +75,11 @@ struct HomeView: View {
             .sheet(isPresented: $showingShare) {
                 SavingsShareView(content: shareContent)
             }
+            // サブスク集計が変わるたびにウィジェット用スナップショットを更新する (#26)。
+            // 追加/解約/削除いずれも @Query に反映されるため、この 1 箇所で全経路を拾える。
+            .onChange(of: [monthlyTotal, activeSubscriptions.count], initial: true) { _, _ in
+                WidgetSnapshotUpdater.update(from: subscriptions)
+            }
         }
     }
 
