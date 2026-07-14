@@ -1,0 +1,10 @@
+app_identifier("com.hikaru.failuremuseum.submil")
+
+# メタデータの実体 (#51)。
+metadata_path("./fastlane/metadata")
+
+# バイナリは beta レーン (upload_to_testflight) 側で扱う。
+skip_binary_upload(true)
+
+# スクリーンショット (#50) 準備後に false へ。
+skip_screenshots(true)

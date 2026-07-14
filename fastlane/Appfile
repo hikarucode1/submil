@@ -1,0 +1,9 @@
+app_identifier("com.hikaru.failuremuseum.submil")
+
+# Developer Portal のチーム ID。
+team_id("4BSH37BHRC")
+
+# App Store Connect API Key 運用のため apple_id / itc_team_id は通常不要。
+# Apple ID ログインを使う場合のみ以下を設定する。
+# apple_id(ENV["FASTLANE_APPLE_ID"])
+# itc_team_id(ENV["ITC_TEAM_ID"])

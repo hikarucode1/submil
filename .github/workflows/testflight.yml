@@ -1,0 +1,46 @@
+name: TestFlight
+
+# 手動トリガー。タグ push 等での自動化は運用が固まってから追加する。
+on:
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "実行する fastlane レーン"
+        required: true
+        default: "beta"
+        type: choice
+        options:
+          - beta
+          - upload_metadata
+
+jobs:
+  deploy:
+    runs-on: macos-14
+    timeout-minutes: 45
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+      MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      # 証明書 private リポジトリの clone 用: base64("username:PAT")
+      MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 注意: 本プロジェクトは iOS 26.5 / Xcode 26 系ツールで作成されている。
+      # GitHub ホストランナーのイメージに対応 Xcode が載るまでは、
+      # 対応バージョンを持つ self-hosted ランナー利用も検討する。
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Ruby + Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Run fastlane
+        run: bundle exec fastlane ${{ github.event.inputs.lane }}
