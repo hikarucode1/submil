@@ -41,8 +41,11 @@ import Testing
     }
 
     @Test func bundledCatalogFieldsAreWellFormed() {
+        let services = ServiceCatalog.loadBundled()
+        // 空配列だと for が回らず vacuous pass するため、単体でも空退行を検知させる。
+        #expect(!services.isEmpty)
         // 各エントリが空でない id/name と正の金額を持つ (スキーマの健全性)。
-        for service in ServiceCatalog.loadBundled() {
+        for service in services {
             #expect(!service.id.isEmpty)
             #expect(!service.name.isEmpty)
             #expect(service.defaultMonthlyAmount > 0)
