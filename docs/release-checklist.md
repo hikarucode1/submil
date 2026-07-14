@@ -52,8 +52,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 ## 3. 法務ページ公開 (#52 / #53) — `submil-content`
 
 - [ ] 🌐 submil-content の #1 / #2 マージ後、GitHub Pages が有効か確認
-- [ ] 🌐 `privacy-policy.html` / `terms.html` が **404 でなく表示される**ことをブラウザで確認
-      (アプリ内 #84 とストア #51 がこの URL を参照)
+- [ ] 🌐 `privacy-policy.html` / `terms.html` / `support.html` が **404 でなく表示される**ことをブラウザで確認
+      (アプリ内 #84・ストア #51・ASC サポート URL がこれらを参照。support は content PR #3)
 - [ ] ✍️ **連絡先メール**(暫定 `hikaruken0126@gmail.com`)と**事業者名表記**(暫定「当方」)を確定
       — privacy/terms 両 HTML と ASC 双方を揃える
 
@@ -71,8 +71,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 ## 6. App Store Connect 設定 (#54) 🌐 — `app-store-listing.md`
 
 - [ ] 🌐 App レコード作成(bundle id / SKU / プライマリ言語)
-- [ ] 🌐 **サポート URL(必須)** の実ページを用意して設定 ← 未整備。**申請ブロッカー**
-      (例: submil-content に `support.html` を追加)
+- [ ] 🌐 **サポート URL(必須)** を設定 — ページは作成済み ✅(submil-content の `support.html`, PR #3)。
+      `https://hikarucode1.github.io/submil-content/support.html` を ASC に設定するだけ
 - [ ] 🌐 プライバシーポリシー URL を設定(#52 の Pages URL)
 - [ ] 🌐 カテゴリ(主: ファイナンス / 副: ユーティリティ)、年齢制限レーティング
 - [ ] 🌐 App のプライバシー(データ収集: 使用状況/診断/識別子 = Firebase/AdMob)を申告
@@ -104,7 +104,7 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 申請前ゲート (これが揃うまで提出しない)
 
-- [ ] **サポート URL** が実在し ASC に設定済み(未整備 = 実質リジェクト要因)
+- [ ] **サポート URL** を ASC に設定済み(ページ `support.html` は作成済み ✅、Pages 公開後に疎通確認)
 - [ ] **プライバシーポリシー URL** が公開・疎通済みで ASC に設定済み
 - [ ] **本番 AdMob ID**(unitID / applicationID / `GADApplicationIdentifier`)がプレースホルダーでない
 - [ ] **`GoogleService-Info.plist`** がバンドルに含まれている
