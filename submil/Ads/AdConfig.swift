@@ -33,13 +33,22 @@ enum AdConfig {
     }
 
     /// 実際に読み込むバナー広告ユニット ID。
-    /// Release でプレースホルダーのままリリースする事故を防ぐため、未差し替えなら即座に落として検知する。
+    ///
+    /// 本番 ID がプレースホルダーのまま (差し替え忘れ) の場合の扱い:
+    /// - DEBUG: `assertionFailure` で開発時に大きく検知する。
+    /// - Release (TestFlight / App Store): クラッシュさせず空文字を返し、広告ロードを不成立にする
+    ///   (バナー非表示)。`precondition` と違い実ユーザーをクラッシュさせない graceful degradation。
+    ///   ※ テスト ID を本番配信に使うのは AdMob ポリシー違反のため、フォールバックは空とする。
+    /// TODO(#48): CrashReporter (#48) が同じベースに入ったら、この分岐で `CrashReporter.record` して
+    ///   本番 ID 差し替え漏れを Crashlytics 非致命として検知できるようにする。
     static var bannerUnitID: String {
         guard !useTestAds else { return testBannerUnitID }
-        precondition(
-            !productionBannerUnitID.contains("0000000000000000"),
-            "productionBannerUnitID がプレースホルダーのままです。AdMob 管理画面で発行した本番 ID に差し替えてください (docs/setup/admob.md)。"
-        )
+        if productionBannerUnitID.contains("0000000000000000") {
+            assertionFailure(
+                "productionBannerUnitID がプレースホルダーのままです。AdMob 管理画面で発行した本番 ID に差し替えてください (docs/setup/admob.md)。"
+            )
+            return ""
+        }
         return productionBannerUnitID
     }
 }

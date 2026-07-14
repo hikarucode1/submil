@@ -46,6 +46,22 @@ Xcode で `submil.xcodeproj` を開き、**File > Add Package Dependencies…**:
 併せて手順 2 の `GADApplicationIdentifier` も本番アプリ ID に更新する。
 DEBUG ビルドは `AdConfig.useTestAds == true` で常にテスト広告を出すため、置換後も開発中は安全。
 
+### 差し替え忘れ時の挙動 (重要)
+
+`productionBannerUnitID` がプレースホルダー (`ca-app-pub-0000...`) のままの場合:
+
+- **DEBUG**: `assertionFailure` で停止し、開発時に差し替え忘れを検知する。
+- **Release (TestFlight / App Store)**: クラッシュさせず**バナー非表示**にフォールバックする
+  (`AdConfig.bannerUnitID` が空文字を返し、広告ロードが不成立になる)。実ユーザーをクラッシュ
+  させないための設計。ただし「広告が出ない = 収益ゼロ」に気付きにくいので、下記チェックは必ず行う。
+
+### リリース前チェックリスト
+
+- [ ] `AdConfig.productionBannerUnitID` を本番値に差し替えた (プレースホルダー `0000...` でない)
+- [ ] `AdConfig.productionApplicationID` を本番値に差し替えた
+- [ ] `Info.plist` の `GADApplicationIdentifier` が**本番アプリ ID**である (テスト用のままでない)
+- [ ] Release ビルドの実機でバナーが表示され、テスト広告でないことを確認
+
 ## 4. 動作確認(Mac / シミュレータ)
 
 1. パッケージ追加後にビルドが通ること
