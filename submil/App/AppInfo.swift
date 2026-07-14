@@ -5,12 +5,12 @@ import Foundation
 enum AppInfo {
     /// 例: "1.0"。
     static var version: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
     }
 
     /// 例: "1"。
     static var build: String {
-        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—"
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
     }
 
     /// 設定画面に出す表示用文字列。例: "1.0 (build 1)"。

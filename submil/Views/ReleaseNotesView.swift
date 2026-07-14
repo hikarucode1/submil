@@ -14,6 +14,13 @@ struct ReleaseNotesView: View {
                 } header: {
                     HStack {
                         Text("バージョン \(note.version)")
+                        if note.version == AppInfo.version {
+                            Text("現在")
+                                .font(.caption2.bold())
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.accentColor.opacity(0.2), in: Capsule())
+                        }
                         Spacer()
                         Text(note.date)
                             .foregroundStyle(.secondary)
