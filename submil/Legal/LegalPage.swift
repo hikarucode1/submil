@@ -17,13 +17,17 @@ enum LegalPage: String, Identifiable, CaseIterable {
         }
     }
 
-    /// 公開ページの URL。文字列は固定リテラルのため生成は必ず成功する。
-    var url: URL {
+    /// 公開ページのファイル名。
+    private var fileName: String {
         switch self {
-        case .terms:
-            return URL(string: "https://hikarucode1.github.io/submil-content/terms.html")!
-        case .privacy:
-            return URL(string: "https://hikarucode1.github.io/submil-content/privacy-policy.html")!
+        case .terms:   return "terms.html"
+        case .privacy: return "privacy-policy.html"
         }
+    }
+
+    /// 公開ページの URL。配信ドメインは `ContentCache.defaultBaseURL` と共有し、
+    /// ドメイン変更時のドリフトを防ぐ。
+    var url: URL {
+        ContentCache.defaultBaseURL.appendingPathComponent(fileName)
     }
 }
