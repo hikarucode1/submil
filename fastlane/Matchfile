@@ -1,0 +1,9 @@
+# 証明書を保管する private git リポジトリ。事前に作成し、URL を Secret で渡す。
+git_url(ENV["MATCH_GIT_URL"])
+storage_mode("git")
+
+type("appstore")
+app_identifier(["com.hikaru.failuremuseum.submil"])
+
+# API Key 運用のため username は不要 (Apple ID ログイン時のみ設定)。
+# username(ENV["FASTLANE_APPLE_ID"])
