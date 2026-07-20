@@ -20,6 +20,7 @@ struct RootView: View {
         }
         .task {
             FirebaseStarter.configureIfNeeded()
+            AdMobStarter.startIfNeeded()
             #if DEBUG
             SampleData.seed(into: modelContext)
             #endif
