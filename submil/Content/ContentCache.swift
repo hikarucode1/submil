@@ -69,7 +69,12 @@ actor ContentCache {
             memory[resource] = cached
             return cached
         }
-        return bundledData(resource)
+        if let bundled = bundledData(resource) {
+            return bundled
+        }
+        // リモート・ディスク・バンドルすべて失敗 (= 空表示)。診断のため記録だけ残す (#48)。
+        CrashReporter.log("ContentCache: all sources failed for \(resource.rawValue)")
+        return nil
     }
 
     // MARK: - Remote

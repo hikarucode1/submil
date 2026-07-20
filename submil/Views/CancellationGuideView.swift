@@ -173,6 +173,7 @@ struct CancellationGuideView: View {
         subscription.updatedAt = .now
         let log = CancellationLog(from: subscription, reason: reason)
         modelContext.insert(log)
+        AnalyticsService.log(.cancellationCompleted(annualSavingYen: log.annualSavingYen))
         return CancellationSummary(serviceName: subscription.serviceName, annualSaving: log.annualSavingYen)
     }
 }

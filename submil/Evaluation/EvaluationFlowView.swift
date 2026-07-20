@@ -149,6 +149,7 @@ struct EvaluationFlowView: View {
             difficulty: difficulty
         )
         modelContext.insert(evaluation)
+        AnalyticsService.log(.evaluationCompleted(result: evaluation.result.rawValue))
         result = evaluation.result
         advance(to: .result)
     }
