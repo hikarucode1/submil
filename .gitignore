@@ -70,3 +70,6 @@ secrets.xcconfig
 
 # Logs
 *.log
+
+# App icon generator output (scripts/generate_app_icon.py)
+scripts/icons/
