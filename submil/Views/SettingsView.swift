@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// 設定タブ (#53 で法務ページへのリンクを実装)。
-/// 利用規約・プライバシーポリシーを `SafariView` (アプリ内ブラウザ) で開く。
-/// バージョン表示・通知設定等は今後 (#57 ほか) このリストに追加していく。
+/// 設定タブ。「このアプリについて」に法務ページ (#53)・リリースノート/バージョン (#57) を表示する。
+/// 利用規約・プライバシーポリシーは `SafariView` (アプリ内ブラウザ) で開く。
+/// 通知設定等は今後このリストに追加していく。
 struct SettingsView: View {
     @State private var activePage: LegalPage?
 
@@ -13,6 +13,12 @@ struct SettingsView: View {
                     ForEach(LegalPage.allCases) { page in
                         legalRow(page)
                     }
+                    NavigationLink {
+                        ReleaseNotesView()
+                    } label: {
+                        Text("リリースノート")
+                    }
+                    versionRow
                 }
             }
             .navigationTitle("設定")
@@ -21,6 +27,16 @@ struct SettingsView: View {
                     .ignoresSafeArea()
             }
         }
+    }
+
+    private var versionRow: some View {
+        HStack {
+            Text("バージョン")
+            Spacer()
+            Text(AppInfo.displayVersion)
+                .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .combine)
     }
 
     private func legalRow(_ page: LegalPage) -> some View {
