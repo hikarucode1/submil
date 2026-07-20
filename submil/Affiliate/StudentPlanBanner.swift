@@ -10,6 +10,10 @@ struct StudentPlanBanner: View {
 
     var body: some View {
         Button {
+            AnalyticsService.log(.affiliateClicked(
+                serviceId: plan.serviceId,
+                provider: plan.affiliateProvider
+            ))
             showingSafari = true
         } label: {
             content

@@ -19,6 +19,7 @@ struct RootView: View {
                 .tabItem { Label("設定", systemImage: "gearshape.fill") }
         }
         .task {
+            FirebaseStarter.configureIfNeeded()
             AdMobStarter.startIfNeeded()
             #if DEBUG
             SampleData.seed(into: modelContext)
