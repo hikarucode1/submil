@@ -15,15 +15,15 @@ App Store Connect に登録する日本語メタデータ。値の実体は
 | 概要(Description) | `description.txt` | 4000 | ペイン訴求 + 機能列挙 + 学割アピール |
 | リリースノート | `release_notes.txt` | 4000 | v1.0 初回リリース用 |
 | プライバシーポリシー URL | `privacy_url.txt` | — | GitHub Pages (#52) |
+| サポート URL | `support_url.txt` | — | GitHub Pages のサポートページ (FAQ + 問い合わせ先) |
 
 > 文字数は全角も 1 文字としてカウント(App Store の仕様)。各ファイルは末尾改行なしの
 > プレーンテキスト。
 
 ## 提出前に確定が必要な項目 (TODO)
 
-- [ ] **サポート URL(必須)**: App Store は新規アプリにサポート URL を必須とする。
-      問い合わせ先や FAQ を載せた実在ページが必要。未整備のため `support_url.txt` は
-      あえて未作成。専用ページ(例: `submil-content` に `support.html` を追加)を用意して設定する。
+- [x] **サポート URL(必須)**: `submil-content` の `support.html` を公開済み
+      (<https://hikarucode1.github.io/submil-content/support.html>)。`support_url.txt` に設定済み。
 - [ ] **マーケティング URL(任意)**: ランディングページがあれば `marketing_url.txt` を追加。
 - [ ] カテゴリ: 主「ファイナンス」/ 副「ユーティリティ」を想定(ASC 側で設定、#54)。
 - [ ] 年齢制限レーティング: ASC のアンケートで確定(#54)。
