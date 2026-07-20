@@ -3,6 +3,8 @@ import SwiftData
 
 struct RootView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var didStartAds = false
 
     var body: some View {
         TabView {
@@ -20,10 +22,16 @@ struct RootView: View {
         }
         .task {
             FirebaseStarter.configureIfNeeded()
-            AdMobStarter.startIfNeeded()
             #if DEBUG
             SampleData.seed(into: modelContext)
             #endif
+        }
+        .onChange(of: scenePhase, initial: true) { _, newPhase in
+            // ATT ダイアログはアプリが active の時のみ表示される。
+            // 初回 active への遷移時に一度だけ ATT → AdMob 初期化を行う。
+            guard newPhase == .active, !didStartAds else { return }
+            didStartAds = true
+            Task { await AdMobStarter.startAfterTrackingAuthorization() }
         }
     }
 }
