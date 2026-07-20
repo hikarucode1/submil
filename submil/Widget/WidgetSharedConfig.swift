@@ -15,7 +15,12 @@ enum WidgetSharedConfig {
     /// ウィジェットの kind 識別子 (WidgetKit の reload / 定義で使う)。
     static let widgetKind = "SubmilMonthlyTotalWidget"
 
-    /// 共有 UserDefaults。App Group 未設定の環境では nil になり得るため呼び出し側で握る。
+    /// 共有 UserDefaults。
+    ///
+    /// 注意: `UserDefaults(suiteName:)` は App Group entitlement が未設定でも **非 nil を返す**
+    /// (書き込みは共有されない領域に落ち、コンソールに CFPrefs 警告が出るだけ)。
+    /// nil になるのは suiteName が bundle id と同一など不正な場合のみで、このガードは保険。
+    /// entitlement 未設定時はウィジェット側から読めず `.empty` 表示になる (`docs/setup/widget.md`)。
     static var sharedDefaults: UserDefaults? {
         UserDefaults(suiteName: appGroupID)
     }

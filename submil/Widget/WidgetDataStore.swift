@@ -11,7 +11,8 @@ import WidgetKit
 /// このファイルは **app / ウィジェット両ターゲット**に含める。
 enum WidgetDataStore {
     /// 共有ストアへスナップショットを保存し、ウィジェットを更新する。
-    /// App Group 未設定 (`sharedDefaults == nil`) の場合は no-op。
+    /// App Group entitlement 未設定でも `sharedDefaults` は通常非 nil で、書き込みは
+    /// 共有されない領域に落ちる (ウィジェットは `.empty` 表示のまま)。nil ガードは保険。
     static func save(_ snapshot: SubscriptionSnapshot) {
         guard let defaults = WidgetSharedConfig.sharedDefaults else { return }
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
