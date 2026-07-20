@@ -5,15 +5,21 @@ import GoogleMobileAds
 
 /// AdMob SDK の初期化を担う (#45)。
 ///
-/// `submilApp` (App エントリ) には手を入れず、`RootView` の `.task` から呼ぶ方針。
-/// `.task` は view のライフサイクルで再実行され得るため、多重呼び出しの抑止はここで保証する。
+/// `submilApp` (App エントリ) には手を入れず、`RootView` から呼ぶ方針。
+/// 呼び出し元は view のライフサイクルで再実行され得るため、多重呼び出しの抑止はここで保証する。
 /// `GoogleMobileAds` 未追加の環境では no-op になり、SPM パッケージ追加前でもビルドできる。
-///
-/// 注意 (#46): 本来 ATT (App Tracking Transparency) の許可要求を経てから SDK を開始/計測するのが望ましい。
-/// ATT ダイアログ実装 (#46) と統合する際は、`startIfNeeded()` の呼び出しを ATT 応答後へ寄せること。
 @MainActor
 enum AdMobStarter {
     private static var hasStarted = false
+
+    /// ATT (#46) の許可要求を経てから SDK を初期化する。通常はこちらを使う。
+    /// Google 推奨どおり、ATT の結果 (許可/拒否) に関わらず応答後に SDK を開始する。
+    /// - 重要: ATT ダイアログはアプリが `active` の時のみ表示されるため、
+    ///   `RootView` で `scenePhase == .active` を確認してから呼ぶこと。
+    static func startAfterTrackingAuthorization() async {
+        await TrackingAuthorization.requestIfNeeded()
+        startIfNeeded()
+    }
 
     /// アプリ起動後に一度だけ SDK を初期化する。2 回目以降の呼び出しは no-op。
     static func startIfNeeded() {
