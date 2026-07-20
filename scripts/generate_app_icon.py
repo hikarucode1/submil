@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """submil アプリアイコン候補ジェネレータ (1024x1024, light/dark/tinted)."""
 from PIL import Image, ImageDraw
+import math
 import os
 
 SIZE = 1024
@@ -123,7 +124,6 @@ def cand_c(variant):
     lw = int(S * 0.055)
     d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=ring, width=lw)
     # ハンドル
-    import math
     ang = math.radians(45)
     hx1 = cx + (r + lw * 0.2) * math.cos(ang)
     hy1 = cy + (r + lw * 0.2) * math.sin(ang)
