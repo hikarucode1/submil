@@ -75,6 +75,10 @@ struct HomeView: View {
             .sheet(isPresented: $showingShare) {
                 SavingsShareView(content: shareContent)
             }
+            .safeAreaInset(edge: .bottom) {
+                // ホーム画面下部のバナー広告 (#45)。リスト内容と重ならないよう safeAreaInset で敷く。
+                BannerAdContainer()
+            }
         }
     }
 
