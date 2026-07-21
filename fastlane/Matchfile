@@ -3,7 +3,11 @@ git_url(ENV["MATCH_GIT_URL"])
 storage_mode("git")
 
 type("appstore")
-app_identifier(["com.hikaru.failuremuseum.submil"])
+# app 本体 + Widget Extension (#26) の両 App ID を管理する。
+app_identifier([
+  "com.hikaru.failuremuseum.submil",
+  "com.hikaru.failuremuseum.submil.submilWidget"
+])
 
 # API Key 運用のため username は不要 (Apple ID ログイン時のみ設定)。
 # username(ENV["FASTLANE_APPLE_ID"])

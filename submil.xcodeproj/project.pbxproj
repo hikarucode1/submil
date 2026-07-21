@@ -12,7 +12,6 @@
 		283B15B9500A3A822B388D58 /* WidgetDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A738A44EE0BFE1DAF359CD /* WidgetDataStore.swift */; };
 		49694A13E6B25B4A96B5F853 /* submilWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		78F0DFEF58F0D1B8D6FDB8A9 /* SubmilWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B0E463CBB2439878D57C88 /* SubmilWidget.swift */; };
-		96B21266DB6200A2E2782F65 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B362AA721B92C86662D692C8 /* Foundation.framework */; };
 		AC2A59295B2245AAEDDD2848 /* SubmilWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECB6E4A7D3EFD2B4D06F7C /* SubmilWidgetView.swift */; };
 		B1C69EF203EBAD23CB502829 /* SubmilWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A331410833FE2AD242DA255A /* SubmilWidgetBundle.swift */; };
 /* End PBXBuildFile section */
@@ -64,7 +63,6 @@
 		83B0E463CBB2439878D57C88 /* SubmilWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmilWidget.swift; sourceTree = "<group>"; };
 		86637DD0310E41122B07D412 /* submilWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = submilWidget.entitlements; sourceTree = "<group>"; };
 		A331410833FE2AD242DA255A /* SubmilWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmilWidgetBundle.swift; sourceTree = "<group>"; };
-		B362AA721B92C86662D692C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		D3ECB6E4A7D3EFD2B4D06F7C /* SubmilWidgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmilWidgetView.swift; sourceTree = "<group>"; };
 		E162DD26AEAE6F1E0C77331C /* WidgetSharedConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetSharedConfig.swift; path = submil/Widget/WidgetSharedConfig.swift; sourceTree = "<group>"; };
 		EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = submilWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,7 +118,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96B21266DB6200A2E2782F65 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,7 +173,6 @@
 		7EEFC5A174EE5B1C14CEF2F9 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				B362AA721B92C86662D692C8 /* Foundation.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
