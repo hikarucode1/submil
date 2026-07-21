@@ -40,17 +40,26 @@ enum AdConfig {
     ///   (バナー非表示)。`precondition` と違い実ユーザーをクラッシュさせない graceful degradation。
     ///   ※ テスト ID を本番配信に使うのは AdMob ポリシー違反のため、フォールバックは空とする。
     ///   併せて `CrashReporter.record` の非致命記録で差し替え漏れを Crashlytics から検知できるようにする。
+    ///   本プロパティは SwiftUI の body (レイアウトパスごと) から評価されるため、記録は起動ごとに 1 回に抑える。
+    @MainActor
     static var bannerUnitID: String {
         guard !useTestAds else { return testBannerUnitID }
         if productionBannerUnitID.contains("0000000000000000") {
             assertionFailure(
                 "productionBannerUnitID がプレースホルダーのままです。AdMob 管理画面で発行した本番 ID に差し替えてください (docs/setup/admob.md)。"
             )
-            CrashReporter.record(AdConfigError.placeholderBannerUnitID)
+            if !didRecordPlaceholder {
+                didRecordPlaceholder = true
+                CrashReporter.record(AdConfigError.placeholderBannerUnitID)
+            }
             return ""
         }
         return productionBannerUnitID
     }
+
+    /// プレースホルダー検知の非致命記録を起動ごとに 1 回に抑えるフラグ。
+    @MainActor
+    private static var didRecordPlaceholder = false
 }
 
 /// AdConfig の設定不備を Crashlytics 非致命として集計するためのエラー (#45/#48)。
@@ -58,7 +67,8 @@ enum AdConfigError: Error, CustomNSError {
     /// Release ビルドで本番バナー ID がプレースホルダーのまま (バナー非表示で継続)。
     case placeholderBannerUnitID
 
-    static let errorDomain = "jp.submil.AdConfigError"
+    /// bundle id (`com.hikaru.failuremuseum.submil`) に体系を揃える。以後のエラードメインも同規則で。
+    static let errorDomain = "com.hikaru.failuremuseum.submil.AdConfigError"
 
     var errorCode: Int {
         switch self {
