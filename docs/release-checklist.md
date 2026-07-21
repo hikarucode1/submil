@@ -21,8 +21,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 | 5 | 規約(アプリ内) → バージョン表示 | **#84 → #87** | #84 は content 公開後に URL 疎通確認してから |
 | 6 | バンドル統合テスト | **#88** | 独立 |
 
-> マージ後の私 (Claude) 側フォローアップ: **#48 合流後、`AdConfig` に `CrashReporter.record` を追加**
-> (本番 ID 差し替え漏れを Crashlytics 非致命記録する。現状は TODO コメント残置)。
+> マージ後の私 (Claude) 側フォローアップ: ~~#48 合流後、`AdConfig` に `CrashReporter.record` を追加~~
+> → 対応済み ✅ (`AdConfigError.placeholderBannerUnitID` を非致命記録)。
 
 ---
 
