@@ -21,12 +21,24 @@ struct RootView: View {
                 .tabItem { Label("設定", systemImage: "gearshape.fill") }
         }
         .task {
+            #if DEBUG
+            // スクリーンショット撮影 (#50) 時は計測/広告なしで撮る。専用のデモデータを投入する。
+            if SnapshotSupport.isActive {
+                SnapshotSupport.prepareUIIfNeeded()
+                SnapshotSupport.seed(into: modelContext)
+                return
+            }
+            #endif
             FirebaseStarter.configureIfNeeded()
             #if DEBUG
             SampleData.seed(into: modelContext)
             #endif
         }
         .onChange(of: scenePhase, initial: true) { _, newPhase in
+            #if DEBUG
+            // 撮影モードでは ATT ダイアログも AdMob 初期化も行わない (画面を汚さない)。
+            if SnapshotSupport.isActive { return }
+            #endif
             // ATT ダイアログはアプリが active の時のみ表示される。
             // 初回 active への遷移時に一度だけ ATT → AdMob 初期化を行う。
             guard newPhase == .active, !didStartAds else { return }

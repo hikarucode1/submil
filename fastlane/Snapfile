@@ -1,0 +1,41 @@
+# App Store 用スクリーンショット自動撮影 (#50)。
+# 使い方: bundle exec fastlane screenshots
+
+# --- 対象端末 ---
+# App Store Connect の必須枠は 6.9"/6.7" 統合スロット (6.9" 画像で 6.7" も兼ねられる)。
+# 手元の iOS 26.5 ランタイムに 15/16 Pro Max Sim が無いため、6.9" の iPhone 17 Pro Max で撮る。
+# 別ランタイムに 6.7" 機 (iPhone 15/16 Pro Max, 16 Plus) を入れた場合はそちらへ差し替え可。
+devices([
+  "iPhone 17 Pro Max"
+])
+# 5.5" (iPhone 8 Plus) はオプション枠。撮る場合は iOS 16 系ランタイムを入れてから追記する:
+#   Xcode > Settings > Components から iOS 16.x をダウンロード
+#   devices(["iPhone 17 Pro Max", "iPhone 8 Plus"])
+
+# --- 言語 ---
+# メタデータ (fastlane/metadata/ja) と揃える。deliver はこのフォルダ名で拾う。
+languages([
+  "ja"
+])
+
+# --- ビルド対象 ---
+scheme("submil")
+
+# 撮影用 UITest だけを走らせる。
+# 既定の boilerplate UITest (testExample / testLaunch) は撮影に不要な上、
+# 環境によってはハングするため実行しない。
+only_testing(["submilUITests/SubmilScreenshots"])
+
+# --- 出力 ---
+output_directory("./fastlane/screenshots")
+clear_previous_screenshots(true)
+
+# --- 実行オプション ---
+# 撮影は 1 端末なので並列は不要。安定性優先で逐次実行にする。
+concurrent_simulators(false)
+# ステータスバーを 9:41 / フル電波 / フル電池に整える (審査で好まれる見栄え)。
+override_status_bar(true)
+# 失敗時に少しだけ粘る。
+number_of_retries(1)
+# 実行ログを見やすく。
+stop_after_first_error(false)

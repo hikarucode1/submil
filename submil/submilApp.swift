@@ -11,7 +11,12 @@ struct submilApp: App {
             UsageEvaluation.self,
             CancellationLog.self,
         ])
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        // スクリーンショット撮影 (#50) 時は永続化せず毎回クリーンな状態から始める。
+        var storedInMemoryOnly = false
+        #if DEBUG
+        storedInMemoryOnly = SnapshotSupport.isActive
+        #endif
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: storedInMemoryOnly)
         do {
             modelContainer = try ModelContainer(for: schema, configurations: [configuration])
         } catch {
