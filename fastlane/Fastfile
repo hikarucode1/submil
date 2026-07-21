@@ -1,6 +1,9 @@
 default_platform(:ios)
 
 APP_IDENTIFIER = "com.hikaru.failuremuseum.submil".freeze
+# Widget Extension (#26) も独自の App ID を持ち、署名対象に含める必要がある。
+WIDGET_IDENTIFIER = "#{APP_IDENTIFIER}.submilWidget".freeze
+ALL_IDENTIFIERS = [APP_IDENTIFIER, WIDGET_IDENTIFIER].freeze
 SCHEME = "submil".freeze
 XCODEPROJ = "submil.xcodeproj".freeze
 
@@ -25,14 +28,16 @@ platform :ios do
   desc "証明書・プロビジョニングプロファイルを match で同期する"
   lane :certificates do
     key = asc_api_key
-    # CI では readonly (生成せず取得のみ)。
-    match(type: "appstore", app_identifier: APP_IDENTIFIER, api_key: key, readonly: is_ci)
+    # CI では readonly (生成せず取得のみ)。app + widget 両 App ID 分を同期する。
+    match(type: "appstore", app_identifier: ALL_IDENTIFIERS, api_key: key, readonly: is_ci)
   end
 
   desc "ビルドして TestFlight にアップロードする (fastlane beta)"
   lane :beta do
     key = asc_api_key
-    match(type: "appstore", app_identifier: APP_IDENTIFIER, api_key: key, readonly: is_ci)
+    # app + widget (#26) 両 App ID のプロファイルを同期する。widget 分が無いと
+    # アーカイブ/エクスポートで submilWidget の署名に失敗する。
+    match(type: "appstore", app_identifier: ALL_IDENTIFIERS, api_key: key, readonly: is_ci)
 
     # 直近の TestFlight ビルド番号 +1。まだ無ければ 1 から。
     # 注意: version 未指定のため「現行マーケティングバージョンの最新ビルド」を基準にする。
@@ -52,7 +57,8 @@ platform :ios do
       xcargs: "CURRENT_PROJECT_VERSION=#{build_number}",
       export_options: {
         provisioningProfiles: {
-          APP_IDENTIFIER => "match AppStore #{APP_IDENTIFIER}"
+          APP_IDENTIFIER => "match AppStore #{APP_IDENTIFIER}",
+          WIDGET_IDENTIFIER => "match AppStore #{WIDGET_IDENTIFIER}"
         }
       }
     )

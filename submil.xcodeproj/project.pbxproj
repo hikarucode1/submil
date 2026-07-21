@@ -6,6 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		037D27C8A52C2AAC80CF7C14 /* WidgetSharedConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E162DD26AEAE6F1E0C77331C /* WidgetSharedConfig.swift */; };
+		26DB7551CE2CF002B5AD9C77 /* SubscriptionSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBFFDD89D1BAF1C64435D5 /* SubscriptionSnapshot.swift */; };
+		283B15B9500A3A822B388D58 /* WidgetDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A738A44EE0BFE1DAF359CD /* WidgetDataStore.swift */; };
+		49694A13E6B25B4A96B5F853 /* submilWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		78F0DFEF58F0D1B8D6FDB8A9 /* SubmilWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B0E463CBB2439878D57C88 /* SubmilWidget.swift */; };
+		AC2A59295B2245AAEDDD2848 /* SubmilWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECB6E4A7D3EFD2B4D06F7C /* SubmilWidgetView.swift */; };
+		B1C69EF203EBAD23CB502829 /* SubmilWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A331410833FE2AD242DA255A /* SubmilWidgetBundle.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		17457C482FC35903009C756E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,27 +31,62 @@
 			remoteGlobalIDString = 17457C372FC358FF009C756E;
 			remoteInfo = submil;
 		};
+		2A4E1890470EF7822437427F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 17457C302FC358FF009C756E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 12F9FD924EE02156335BAE51;
+			remoteInfo = submilWidget;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2D0BCA6A80FA594689DB9004 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				49694A13E6B25B4A96B5F853 /* submilWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		17457C382FC358FF009C756E /* submil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = submil.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17457C472FC35903009C756E /* submilTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = submilTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17457C512FC35903009C756E /* submilUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = submilUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		18A738A44EE0BFE1DAF359CD /* WidgetDataStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetDataStore.swift; path = submil/Widget/WidgetDataStore.swift; sourceTree = "<group>"; };
+		51EBFFDD89D1BAF1C64435D5 /* SubscriptionSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SubscriptionSnapshot.swift; path = submil/Widget/SubscriptionSnapshot.swift; sourceTree = "<group>"; };
+		83B0E463CBB2439878D57C88 /* SubmilWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmilWidget.swift; sourceTree = "<group>"; };
+		86637DD0310E41122B07D412 /* submilWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = submilWidget.entitlements; sourceTree = "<group>"; };
+		A331410833FE2AD242DA255A /* SubmilWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmilWidgetBundle.swift; sourceTree = "<group>"; };
+		D3ECB6E4A7D3EFD2B4D06F7C /* SubmilWidgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubmilWidgetView.swift; sourceTree = "<group>"; };
+		E162DD26AEAE6F1E0C77331C /* WidgetSharedConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetSharedConfig.swift; path = submil/Widget/WidgetSharedConfig.swift; sourceTree = "<group>"; };
+		EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = submilWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17457C3A2FC358FF009C756E /* submil */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = submil;
 			sourceTree = "<group>";
 		};
 		17457C4A2FC35903009C756E /* submilTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = submilTests;
 			sourceTree = "<group>";
 		};
 		17457C542FC35903009C756E /* submilUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = submilUITests;
 			sourceTree = "<group>";
 		};
@@ -69,6 +114,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6742C8119CAD6C67C2301C0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -79,6 +131,11 @@
 				17457C4A2FC35903009C756E /* submilTests */,
 				17457C542FC35903009C756E /* submilUITests */,
 				17457C392FC358FF009C756E /* Products */,
+				350748B4C7DF3F6F47599BF3 /* Frameworks */,
+				6E5647BE344655BD4BB5DA8B /* submilWidget */,
+				E162DD26AEAE6F1E0C77331C /* WidgetSharedConfig.swift */,
+				51EBFFDD89D1BAF1C64435D5 /* SubscriptionSnapshot.swift */,
+				18A738A44EE0BFE1DAF359CD /* WidgetDataStore.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,13 +145,58 @@
 				17457C382FC358FF009C756E /* submil.app */,
 				17457C472FC35903009C756E /* submilTests.xctest */,
 				17457C512FC35903009C756E /* submilUITests.xctest */,
+				EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		350748B4C7DF3F6F47599BF3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7EEFC5A174EE5B1C14CEF2F9 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6E5647BE344655BD4BB5DA8B /* submilWidget */ = {
+			isa = PBXGroup;
+			children = (
+				A331410833FE2AD242DA255A /* SubmilWidgetBundle.swift */,
+				83B0E463CBB2439878D57C88 /* SubmilWidget.swift */,
+				D3ECB6E4A7D3EFD2B4D06F7C /* SubmilWidgetView.swift */,
+				86637DD0310E41122B07D412 /* submilWidget.entitlements */,
+			);
+			name = submilWidget;
+			path = submilWidget;
+			sourceTree = "<group>";
+		};
+		7EEFC5A174EE5B1C14CEF2F9 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		12F9FD924EE02156335BAE51 /* submilWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CDBD33AB7CE786865EAB25F /* Build configuration list for PBXNativeTarget "submilWidget" */;
+			buildPhases = (
+				C4437828CDEED24B85D7B3FA /* Sources */,
+				6742C8119CAD6C67C2301C0B /* Frameworks */,
+				DE534E67BEDEDEEE340D29CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = submilWidget;
+			productName = submilWidget;
+			productReference = EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		17457C372FC358FF009C756E /* submil */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17457C5B2FC35903009C756E /* Build configuration list for PBXNativeTarget "submil" */;
@@ -102,17 +204,17 @@
 				17457C342FC358FF009C756E /* Sources */,
 				17457C352FC358FF009C756E /* Frameworks */,
 				17457C362FC358FF009C756E /* Resources */,
+				2D0BCA6A80FA594689DB9004 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				02DDEADF6680A812D1384F72 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				17457C3A2FC358FF009C756E /* submil */,
 			);
 			name = submil;
-			packageProductDependencies = (
-			);
 			productName = submil;
 			productReference = 17457C382FC358FF009C756E /* submil.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +236,6 @@
 				17457C4A2FC35903009C756E /* submilTests */,
 			);
 			name = submilTests;
-			packageProductDependencies = (
-			);
 			productName = submilTests;
 			productReference = 17457C472FC35903009C756E /* submilTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +257,6 @@
 				17457C542FC35903009C756E /* submilUITests */,
 			);
 			name = submilUITests;
-			packageProductDependencies = (
-			);
 			productName = submilUITests;
 			productReference = 17457C512FC35903009C756E /* submilUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -203,6 +301,7 @@
 				17457C372FC358FF009C756E /* submil */,
 				17457C462FC35903009C756E /* submilTests */,
 				17457C502FC35903009C756E /* submilUITests */,
+				12F9FD924EE02156335BAE51 /* submilWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +322,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		17457C4F2FC35903009C756E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE534E67BEDEDEEE340D29CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,9 +359,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C4437828CDEED24B85D7B3FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1C69EF203EBAD23CB502829 /* SubmilWidgetBundle.swift in Sources */,
+				78F0DFEF58F0D1B8D6FDB8A9 /* SubmilWidget.swift in Sources */,
+				AC2A59295B2245AAEDDD2848 /* SubmilWidgetView.swift in Sources */,
+				037D27C8A52C2AAC80CF7C14 /* WidgetSharedConfig.swift in Sources */,
+				26DB7551CE2CF002B5AD9C77 /* SubscriptionSnapshot.swift in Sources */,
+				283B15B9500A3A822B388D58 /* WidgetDataStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		02DDEADF6680A812D1384F72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = submilWidget;
+			target = 12F9FD924EE02156335BAE51 /* submilWidget */;
+			targetProxy = 2A4E1890470EF7822437427F /* PBXContainerItemProxy */;
+		};
 		17457C492FC35903009C756E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 17457C372FC358FF009C756E /* submil */;
@@ -395,6 +520,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = submil/submil.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
@@ -428,6 +554,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = submil/submil.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
@@ -540,6 +667,69 @@
 			};
 			name = Release;
 		};
+		17EA37FE85F74F1CBB3E985A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = submilWidget/submilWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4BSH37BHRC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = submilWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "サブミル";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hikaru.failuremuseum.submil.submilWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F464011907147796F9A66672 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = submilWidget/submilWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4BSH37BHRC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = submilWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "サブミル";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hikaru.failuremuseum.submil.submilWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -575,6 +765,15 @@
 			buildConfigurations = (
 				17457C622FC35903009C756E /* Debug */,
 				17457C632FC35903009C756E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9CDBD33AB7CE786865EAB25F /* Build configuration list for PBXNativeTarget "submilWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17EA37FE85F74F1CBB3E985A /* Release */,
+				F464011907147796F9A66672 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
