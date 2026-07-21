@@ -1,0 +1,16 @@
+{
+  "device_frame_version": "latest",
+  "default": {
+    "keyword": {
+      "font": ".SFCompact-Bold"
+    },
+    "title": {
+      "color": "#1C1C1E",
+      "font": ".SFCompact-Bold"
+    },
+    "background": "#F2F2F7",
+    "padding": 50,
+    "show_complete_frame": false,
+    "title_below_image": false
+  }
+}

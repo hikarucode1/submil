@@ -63,6 +63,19 @@ struct BannerAdContainer: View {
     @State private var bannerHeight: CGFloat = 50
 
     var body: some View {
+        #if DEBUG
+        // スクリーンショット撮影 (#50) 時は広告未初期化で空枠になるため敷かない。
+        if SnapshotSupport.isActive {
+            EmptyView()
+        } else {
+            bannerBody
+        }
+        #else
+        bannerBody
+        #endif
+    }
+
+    private var bannerBody: some View {
         GeometryReader { proxy in
             AdaptiveBannerView(unitID: AdConfig.bannerUnitID, width: proxy.size.width)
                 .frame(width: proxy.size.width, height: bannerHeight)
