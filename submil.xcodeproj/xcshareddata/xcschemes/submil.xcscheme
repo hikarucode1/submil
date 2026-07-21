@@ -20,6 +20,20 @@
                ReferencedContainer = "container:submil.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "12F9FD924EE02156335BAE51"
+               BuildableName = "submilWidget.appex"
+               BlueprintName = "submilWidget"
+               ReferencedContainer = "container:submil.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

@@ -4,8 +4,12 @@ WidgetKit で月額合計を表示するホーム画面ウィジェット (Small
 SwiftData ストアは共有せず、**アプリが集計値 (月額合計・件数) を App Group の共有 UserDefaults に
 書き出し、ウィジェットはそれを読むだけ**の軽量方式(SwiftData 非依存・App エントリの ModelContainer 変更なし)。
 
-コード側 (`submil/Widget/`, `submilWidget/`, HomeView フック) は実装済み。以下は
-**Mac / Xcode 上でのみ実施できる手動手順**(新規ターゲット作成・App Group 権限)。
+コード側 (`submil/Widget/`, `submilWidget/`, HomeView フック) と **Widget Extension ターゲット
+`submilWidget` は作成済み**(#26 / feat/26-widget-target)。app へ埋め込み、App Groups entitlements
+(`submil/submil.entitlements` / `submilWidget/submilWidget.entitlements`) も配線済みで、
+シミュレータでは App Group 共有・ウィジェット表示まで動作する。
+
+**残る手動手順は Developer Portal での App Group 作成のみ**(実機/TestFlight/審査向け。下記「Developer Portal」節)。
 
 ## ファイル構成
 
@@ -19,50 +23,40 @@ SwiftData ストアは共有せず、**アプリが集計値 (月額合計・件
 | `submilWidget/SubmilWidgetView.swift` | **widget のみ** |
 | `submilWidget/SubmilWidgetBundle.swift` | **widget のみ** |
 
-## 1. Widget Extension ターゲットを追加
+## プロジェクトに設定済みの内容 (feat/26-widget-target)
 
-Xcode > File > New > Target… > **Widget Extension**。
+Widget Extension ターゲットは `xcodeproj` gem スクリプトで pbxproj に追加済み。手動の
+Xcode 操作は不要。設定内容:
 
-- Product Name: `submilWidget`
-- **Include Live Activity**: オフ / **Include Configuration App Intent**: オフ(StaticConfiguration を使用)
-- Activate scheme のダイアログは Activate。
+- ターゲット `submilWidget`(app-extension)、Bundle ID `com.hikaru.failuremuseum.submil.submilWidget`
+- Sources: `submilWidget/` の 3 ファイル + 共有 `submil/Widget/` の 3 ファイル
+  (`WidgetSharedConfig` / `SubscriptionSnapshot` / `WidgetDataStore`)を明示参照で追加。
+  `WidgetSnapshotUpdater.swift` は `Subscription` (@Model) 依存のため **widget には含めない**。
+- app に Embed Foundation Extensions で `submilWidget.appex` を埋め込み + target dependency
+- `submilWidget/Info.plist`: `NSExtension > NSExtensionPointIdentifier = com.apple.widgetkit-extension`
+  (`INFOPLIST_KEY_` では注入されないため明示 plist。標準キーは `GENERATE_INFOPLIST_FILE=YES` から自動マージ)
+- App Groups entitlements を app / widget 両方に配線
+  (`submil/submil.entitlements` / `submilWidget/submilWidget.entitlements` = `group.com.hikaru.failuremuseum.submil`)
+- Deployment Target 26.5(`containerBackground` 使用のため iOS 17+ 必須を満たす)
 
-生成された雛形の `.swift`(`submilWidget.swift` 等)は**削除**し、本リポの
-`submilWidget/` 配下の 3 ファイルを widget ターゲットに含める(同期グループなら自動)。
+## Developer Portal (実機 / TestFlight / 審査向け)
 
-## 2. 共有ファイルを widget ターゲットにも追加
+シミュレータは Portal 登録なしで App Group が機能するが、実機配布には Portal 設定が必要:
 
-`submil/Widget/` の以下 3 ファイルを選択し、File Inspector の **Target Membership** で
-`submilWidget` にもチェックを入れる(app は同期グループで自動所属):
+1. Developer Portal > Identifiers > **App Groups** で `group.com.hikaru.failuremuseum.submil` を作成。
+2. app (`…​.submil`) と widget (`…​.submilWidget`) の両 App ID で **App Groups** Capability を有効化し、
+   上記グループに紐付け。
+3. `fastlane match`(App Store)を再生成し、両 App ID 分の provisioning profile を取得。
 
-- `WidgetSharedConfig.swift` / `SubscriptionSnapshot.swift` / `WidgetDataStore.swift`
+## 動作確認 (シミュレータで確認済み)
 
-> `WidgetSnapshotUpdater.swift` は `Subscription` (@Model) に依存するので **widget には追加しない**。
-
-## 3. App Group を両ターゲットに追加
-
-`submil` と `submilWidget` の両方で Signing & Capabilities > **+ Capability > App Groups**:
-
-- グループ ID: **`group.com.hikaru.failuremuseum.submil`**
-  (`WidgetSharedConfig.appGroupID` と一致させる。異なる場合はコード側を合わせる)
-- Developer Portal 側でも同 ID の App Group を作成し、両 App ID に紐付ける。
-
-## 4. デプロイターゲット
-
-widget ターゲットの iOS Deployment Target を app と揃える(本コードは `containerBackground` を
-使うため **iOS 17 以上**が必要。本プロジェクトは iOS 26.5)。
-
-## 5. 動作確認 (Mac / 実機・シミュレータ)
-
-1. app と widget がビルドできること。
-2. app を一度起動しホームタブを表示(`HomeView` の `.onChange(initial: true)` で初回スナップショットが書かれる)。
-3. ホーム画面でウィジェットギャラリーから「サブミル / 月額合計」を追加。Small / Medium で月額合計と件数が出る。
+1. `xcodebuild build -scheme submil` で app + widget がビルドできる。**✅ 確認済み**
+2. app を起動しホームタブを表示(`HomeView` の `.onChange(initial: true)` で初回スナップショットが書かれる)
+   → App Group 共有コンテナに `widget.subscriptionSnapshot` が書き込まれる。**✅ 確認済み**
+3. ホーム画面でウィジェットギャラリーから「月額合計」を追加。Small / Medium で月額合計と件数が出る。
 4. app でサブスクを追加 / 解約 → ホームタブを開く → ウィジェットが更新される
    (`WidgetDataStore.save` が `reloadTimelines` を呼ぶ)。
 5. 未登録時は `¥0 / 登録中 0件` になる。
-
-> App Group が未設定のうちは `WidgetSharedConfig.sharedDefaults` が共有領域にならず、
-> ウィジェットは `.empty`(¥0)を表示する。手順 3 完了後に正しく共有される。
 
 ## 設計メモ
 
