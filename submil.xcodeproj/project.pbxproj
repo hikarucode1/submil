@@ -32,16 +32,22 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17457C3A2FC358FF009C756E /* submil */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = submil;
 			sourceTree = "<group>";
 		};
 		17457C4A2FC35903009C756E /* submilTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = submilTests;
 			sourceTree = "<group>";
 		};
 		17457C542FC35903009C756E /* submilUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = submilUITests;
 			sourceTree = "<group>";
 		};
@@ -111,8 +117,6 @@
 				17457C3A2FC358FF009C756E /* submil */,
 			);
 			name = submil;
-			packageProductDependencies = (
-			);
 			productName = submil;
 			productReference = 17457C382FC358FF009C756E /* submil.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +138,6 @@
 				17457C4A2FC35903009C756E /* submilTests */,
 			);
 			name = submilTests;
-			packageProductDependencies = (
-			);
 			productName = submilTests;
 			productReference = 17457C472FC35903009C756E /* submilTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +159,6 @@
 				17457C542FC35903009C756E /* submilUITests */,
 			);
 			name = submilUITests;
-			packageProductDependencies = (
-			);
 			productName = submilUITests;
 			productReference = 17457C512FC35903009C756E /* submilUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -400,6 +400,7 @@
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "広告をあなたの興味に合わせて最適化するために使用します。許可しなくてもアプリはそのままご利用いただけます。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -433,6 +434,7 @@
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "広告をあなたの興味に合わせて最適化するために使用します。許可しなくてもアプリはそのままご利用いただけます。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
