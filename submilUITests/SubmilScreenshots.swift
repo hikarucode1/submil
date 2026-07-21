@@ -49,31 +49,45 @@ final class SubmilScreenshots: XCTestCase {
             if app.navigationBars["Netflix"].waitForExistence(timeout: 5) {
                 snapshot("03-Detail")
 
-                // 4. 「これ要る?」評価フロー (質問画面)
+                // 4. 「これ要る?」評価フロー — 質問画面 + 5. 評価結果 (解約推奨)
+                //    使っていないサブスクに低使用の回答をして「解約を検討しよう」を出す
+                //    (本アプリの核心的な訴求。学割/節約タブは "実装予定" のため撮らない)。
                 let evaluate = app.buttons["「これ要る?」を評価する"]
                 let reevaluate = app.buttons["もう一度評価する"]
                 let evalTrigger = evaluate.exists ? evaluate : reevaluate
                 if evalTrigger.waitForExistence(timeout: 3) {
                     evalTrigger.tap()
-                    // 最初の質問が出るまで少し待つ。
-                    sleep(1)
-                    snapshot("04-Evaluation")
-                    // シートを下スワイプで閉じる (質問画面には明示的な閉じるが無いことがあるため)。
+
+                    // intro の「はじめる」→ 質問1 (最後に使ったのは?)
+                    let start = app.buttons["はじめる"]
+                    if start.waitForExistence(timeout: 5) {
+                        start.tap()
+                    }
+
+                    // 質問1が出たら、選択肢が並ぶ状態を 04 として撮る。
+                    let q1Choice = app.buttons["それ以上前"]
+                    if q1Choice.waitForExistence(timeout: 5) {
+                        snapshot("04-Evaluation")
+                        q1Choice.tap()                                   // → 質問2
+                    }
+                    // 質問2 (月に何回?) → 「ほぼ使わない」
+                    let q2Choice = app.buttons["ほぼ使わない"]
+                    if q2Choice.waitForExistence(timeout: 5) { q2Choice.tap() }
+                    // 質問3 (無くなったら困る?) → 「全く困らない」→ 結果へ
+                    let q3Choice = app.buttons["全く困らない"]
+                    if q3Choice.waitForExistence(timeout: 5) { q3Choice.tap() }
+
+                    // 評価結果 (解約を検討しよう) を 05 として撮る。
+                    if app.staticTexts["解約を検討しよう"].waitForExistence(timeout: 5) {
+                        snapshot("05-Result")
+                    }
+                    // シートを閉じる。
                     app.swipeDown(velocity: .fast)
                 }
             }
             // ホームへ戻る。
             let back = app.navigationBars.buttons.element(boundBy: 0)
             if back.exists { back.tap() }
-        }
-
-        // 5. 設定
-        let settings = app.tabBars.buttons["設定"]
-        if settings.waitForExistence(timeout: 5) {
-            settings.tap()
-            if app.navigationBars["設定"].waitForExistence(timeout: 5) {
-                snapshot("05-Settings")
-            }
         }
     }
 }
