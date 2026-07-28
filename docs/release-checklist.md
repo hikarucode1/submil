@@ -27,6 +27,9 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
 
 **実行順 (クリティカルパス)**: AdMob/Firebase/ASC 発行(Web) → SPM 追加 + plist 配置 + ID 差し替え(Mac) → `match` → `beta` → TestFlight 招待
 
+> 🖥 **手順2 (Xcode 組み込み) の実行ランブック** → [`docs/setup/xcode-integration.md`](setup/xcode-integration.md)
+> (SPM→plist→Info.plist→AdConfig→dSYM→検証 を順序付きでまとめた実務手順)
+
 ---
 
 ## 0. PR マージ順
