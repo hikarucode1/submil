@@ -96,9 +96,15 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 5. スクリーンショット (#50)
 
-- [ ] 🖥 6.7" / 5.5"(必須サイズ)をシミュレータで撮影
-- [ ] 🖥 `fastlane/metadata/<locale>/screenshots/` に配置し、`Deliverfile` / `beta` レーンの
-      `skip_screenshots` を `false` に変更
+- [x] 🖥 6.9"(iPhone 17 Pro Max = 6.7" 兼用スロット)を `fastlane screenshots` で撮影
+      — 2026-07-28 ja 5 枚 (01-Home / 02-AddSubscription / 03-Detail / 04-Evaluation / 05-Result) を
+      `fastlane/screenshots/ja/` に出力。撮影 UITest `SubmilScreenshots` が緑で通ることを確認済み。
+      ※ 5.5" (iPhone 8 Plus) はオプション枠。撮る場合は iOS 16 系ランタイム追加後に Snapfile へ追記。
+- [ ] 🌐 撮影済みスクショを ASC へ反映 — **`bundle exec fastlane upload_screenshots`**
+      (専用レーンが `./fastlane/screenshots` から `skip_screenshots: false` でアップロード。Deliverfile の
+      `skip_screenshots(true)` はメタデータ専用レーン `upload_metadata` 用の既定なので変更不要)。
+      ※ 実行には ASC API Key (§7 Secrets) が必要 → 未発行のためブロック中。
+      ※ PNG は `.gitignore` により非コミット(再生成可能な成果物として ASC へ直送する設計)。
 
 ## 6. App Store Connect 設定 (#54) 🌐 — `app-store-listing.md`
 
