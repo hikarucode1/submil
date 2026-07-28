@@ -96,19 +96,31 @@ static let productionApplicationID = "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX" //
 
 Target `submil` > **Build Phases** > **+** > **New Run Script Phase** を Compile Sources より後 (末尾) に追加。
 
-**Script:**
+**Script:** (⚠ Firebase 公式ドキュメントのままでは失敗する。下記の `-gsp` 付きを使うこと)
 ```sh
-"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run"
+"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run" -gsp "${SRCROOT}/submil/GoogleService-Info.plist" -p ios
 ```
 
 **Input Files:**
 ```
 ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}
-$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)
+$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)
+$(SRCROOT)/submil/GoogleService-Info.plist
 ```
 
+> ⚠️ **公式手順どおりだとビルドが失敗する (実測)**。理由は 2 つ:
+> 1. 公式の Input Files `$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)` は、現行 Xcode で
+>    `BUILT_PRODUCTS_DIR` が**絶対パス**のため `/…/submil/Users/hikaru/Library/…` という
+>    絶対パス同士の連結になり、存在しないパスを指す → `$(SRCROOT)/` を外す。
+> 2. Run Script は **sandbox 内で実行**され、Input Files に宣言したファイルしか読めない。
+>    `GoogleService-Info.plist` が未宣言だと探索できず
+>    `error: Could not get GOOGLE_APP_ID in Google Services file from build environment` で失敗する
+>    → `-gsp` で明示 **かつ** Input Files に追加する。
+
 - 「Based on dependency analysis」の**チェックを外す** (毎回実行で確実)。
-- Build Settings > **Debug Information Format** = Release は `DWARF with dSYM File` (Xcode デフォルト) を確認。
+- Build Settings > **Debug Information Format** = Release は `DWARF with dSYM File` (本プロジェクトは設定済み ✅)。
+- Debug ビルドでは dSYM が無いため `warning: DEBUG_INFORMATION_FORMAT should be set to dwarf-with-dsym`
+  が出るが**正常**(Release では出ない)。
 - 詳細 → [crashlytics.md](crashlytics.md)
 
 ## ⑥ 検証 (この順で)
