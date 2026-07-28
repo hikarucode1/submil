@@ -7,25 +7,32 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
 
 ---
 
-## 検証済み現状 (2026-07-28 コード実査)
+## 検証済み現状 (2026-07-28 コード実査 → 同日 SDK 組み込み後に再同期)
 
 実コードと突き合わせた結果。以降の各節チェックボックスはこの結論に合わせて更新済み。
+> ⚠️ この節の旧版は本ブランチ初期コミット時点のもの。以降の SDK 組み込みコミット
+> (`670dc68` Firebase/AdMob SDK / `a92ca33` Info.plist+本番ID / `c461db5` dSYM Run Script) で
+> ★印の「未着手」項目はすべて解消済み。下記は再同期後の状態。
 
 **✅ 完了 (コードで確認)**
 - アプリアイコン登録済み (`AppIcon.appiconset`: light/dark/tinted + Contents.json)
 - 輸出コンプライアンス `INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO`
 - ATT 説明文 `NSUserTrackingUsageDescription`、共有スキーム `submil.xcscheme`、bundle id、`MARKETING_VERSION 1.0`
 - ストア文言 `fastlane/metadata/ja/*` 一式 (support_url / privacy_url 含む)、法務ページ HTTP 200
+- **SPM 追加済み**: `GoogleMobileAds` / `FirebaseAnalytics` / `FirebaseCrashlytics` (+ `Package.resolved` コミット済み)
+- **`GoogleService-Info.plist` を `submil/` 配下に配置・コミット済み**
+- **`Config/submil-Info.plist` に本番 `GADApplicationIdentifier` (`…~5066304006`) + `SKAdNetworkItems` 一式**
+- **`AdConfig` の `productionApplicationID` / `productionBannerUnitID` が実値** (プレースホルダ解消済み)
+- **Crashlytics dSYM アップロード Run Script を Build Phases に追加済み** (`-gsp` で plist 明示)
+- **`submilTests` 全 116 tests / 17 suites 緑** (2026-07-28 xcodebuild 確認、iOS 26.5 / iPhone 17)
 
-**❌ 未着手 (＝本当の残作業。★は本チェックリスト旧版とのズレ)**
-- 🌐 AdMob 本番 ID 発行 / 🌐 Firebase 作成→`GoogleService-Info.plist` / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
-- 🖥 SPM `GoogleMobileAds`+`FirebaseAnalytics/Crashlytics` **未追加 ★**
-- 🖥 `GoogleService-Info.plist` **未配置 ★** / `GADApplicationIdentifier`・`SKAdNetworkItems` **未設定 ★**
-- 🖥 `AdConfig` production ID がプレースホルダ (`0000…`) のまま ★
-- 🖥 Crashlytics dSYM アップロード Run Script **未追加 ★**
-- 🖥 スクショ未撮影 (`Deliverfile` は `skip_screenshots(true)`) / `Gemfile.lock` **未コミット ★**
+**❌ 未着手 (＝本当の残作業)** — Web コンソール / 実機 / 撮影 が中心
+- 🌐 Firebase DebugView で 5 イベント + テストクラッシュ受信確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
+- 🖥 実機で ATT ダイアログ 1 回・バナー表示・Crashlytics レポート到達を確認 (シミュレータ不可)
+- 🖥 スクショ未撮影 (`Deliverfile` は `skip_screenshots(true)`) / `Gemfile.lock` **未コミット**
 
-**実行順 (クリティカルパス)**: AdMob/Firebase/ASC 発行(Web) → SPM 追加 + plist 配置 + ID 差し替え(Mac) → `match` → `beta` → TestFlight 招待
+**実行順 (クリティカルパス)**: ~~AdMob/Firebase 発行 → SPM 追加 + plist 配置 + ID 差し替え~~ **(完了)**
+→ ASC レコード発行(Web) + Secrets → `match` → 実機/DebugView 検証 → スクショ → `beta` → TestFlight 招待
 
 > 🖥 **手順2 (Xcode 組み込み) の実行ランブック** → [`docs/setup/xcode-integration.md`](setup/xcode-integration.md)
 > (SPM→plist→Info.plist→AdConfig→dSYM→検証 を順序付きでまとめた実務手順)
@@ -53,10 +60,10 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 1. AdMob / ATT (#45 / #46) — `docs/setup/admob.md`, `att.md`
 
-- [ ] 🖥 SPM で `GoogleMobileAds` (v12+) を追加
-- [ ] 🌐 AdMob 管理画面で本番アプリ ID / バナー ユニット ID を発行
-- [ ] 🖥 `AdConfig.productionApplicationID` / `productionBannerUnitID` を本番値へ差し替え
-- [ ] 🖥 `Info.plist`(ビルド設定)に `GADApplicationIdentifier`(本番アプリ ID)と `SKAdNetworkItems` を追加
+- [x] 🖥 SPM で `GoogleMobileAds` (v12+) を追加
+- [x] 🌐 AdMob 管理画面で本番アプリ ID / バナー ユニット ID を発行 (`ca-app-pub-6546223385891550`)
+- [x] 🖥 `AdConfig.productionApplicationID` / `productionBannerUnitID` を本番値へ差し替え
+- [x] 🖥 `Info.plist`(`Config/submil-Info.plist`)に `GADApplicationIdentifier` と `SKAdNetworkItems` を追加
 - [ ] 🖥 実機で初回起動時に **ATT ダイアログが 1 回だけ**表示されるか確認(active 遷移時)
 - [ ] 🖥 実機でバナー表示を確認(iPhone / **iPad で高さクリップされない**こと、Release でテスト広告でないこと)
 
@@ -65,12 +72,12 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 2. Firebase Analytics / Crashlytics (#47 / #48) — `firebase-analytics.md`, `crashlytics.md`
 
-- [ ] 🌐 Firebase プロジェクト作成 + iOS アプリ登録(bundle id `com.hikaru.failuremuseum.submil`)
-- [ ] 🖥 `GoogleService-Info.plist` を `submil/` 配下に配置(同期グループで自動同梱)
-- [ ] 🖥 SPM で `FirebaseAnalytics` + `FirebaseCrashlytics` を追加
+- [x] 🌐 Firebase プロジェクト作成 + iOS アプリ登録(bundle id `com.hikaru.failuremuseum.submil`)
+- [x] 🖥 `GoogleService-Info.plist` を `submil/` 配下に配置(同期グループで自動同梱)
+- [x] 🖥 SPM で `FirebaseAnalytics` + `FirebaseCrashlytics` を追加
 - [ ] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認
        (subscription_added / evaluation_completed / cancellation_completed / affiliate_clicked / shared)
-- [ ] 🖥 Crashlytics: dSYM アップロードの Run Script を Build Phases に追加
+- [x] 🖥 Crashlytics: dSYM アップロードの Run Script を Build Phases に追加(`-gsp` で plist 明示)
 - [ ] 🖥 Release の Debug Information Format = `DWARF with dSYM File` を確認
 - [ ] 🖥 テストクラッシュ(`CrashReporter.testCrash()`)→ 再起動 → Console にレポート確認
 
@@ -123,7 +130,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 9. テスト / 検証
 
-- [ ] 🖥 `#68` の `ServiceCatalogBundleTests` を含む全テストを Mac / xcodebuild で実行(緑を確認)
+- [x] 🖥 `#68` の `ServiceCatalogBundleTests` を含む全テストを Mac / xcodebuild で実行(緑を確認)
+      — 2026-07-28 `xcodebuild test -only-testing:submilTests`(iPhone 17 / iOS 26.5)で **116 tests / 17 suites 全緑**
 - [ ] 🖥 設定タブ: 利用規約 / プライバシーポリシーがアプリ内ブラウザで開く、バージョン表示(#57)
 
 ---
@@ -132,8 +140,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 - [ ] **サポート URL** を ASC に設定済み(ページは公開・疎通確認済み ✅、`support_url.txt` 設定済み ✅)
 - [ ] **プライバシーポリシー URL** が公開・疎通済みで ASC に設定済み
-- [ ] **本番 AdMob ID**(unitID / applicationID / `GADApplicationIdentifier`)がプレースホルダーでない
-- [ ] **`GoogleService-Info.plist`** がバンドルに含まれている
+- [x] **本番 AdMob ID**(unitID / applicationID / `GADApplicationIdentifier`)がプレースホルダーでない
+- [x] **`GoogleService-Info.plist`** がバンドルに含まれている
 - [ ] **アプリアイコン**(全サイズ)と**スクリーンショット**が登録済み
 - [ ] 年齢制限レーティング / カテゴリ / データ プライバシー申告 / 輸出コンプライアンス 完了
 - [ ] Release ビルドを実機で一通り動作確認(広告表示 / ATT / 各機能)
