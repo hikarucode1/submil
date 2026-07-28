@@ -36,6 +36,8 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+# fastlane が実行のたびに自動生成する (レーン一覧の docs)
+fastlane/README.md
 
 ## Bundler (for fastlane)
 .bundle/
