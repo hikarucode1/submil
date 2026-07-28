@@ -29,7 +29,7 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
 **❌ 未着手 (＝本当の残作業)** — Web コンソール / 実機 / 撮影 が中心
 - 🌐 Firebase DebugView で 5 イベント + テストクラッシュ受信確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
 - 🖥 実機で ATT ダイアログ 1 回・バナー表示・Crashlytics レポート到達を確認 (シミュレータ不可)
-- 🖥 スクショ未撮影 (`Deliverfile` は `skip_screenshots(true)`) / `Gemfile.lock` **未コミット**
+- 🖥 スクショ未撮影 (`Deliverfile` は `skip_screenshots(true)`) — `Gemfile.lock` は **コミット済み** (PR #100)
 
 **実行順 (クリティカルパス)**: ~~AdMob/Firebase 発行 → SPM 追加 + plist 配置 + ID 差し替え~~ **(完了)**
 → ASC レコード発行(Web) + Secrets → `match` → 実機/DebugView 検証 → スクショ → `beta` → TestFlight 招待
@@ -116,7 +116,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [ ] 🌐 App Store Connect API Key 発行 → GitHub Secrets(`ASC_KEY_ID`/`ASC_ISSUER_ID`/`ASC_KEY_CONTENT`)
 - [ ] 🌐 証明書用 **private リポ**作成 → Secrets(`MATCH_GIT_URL`/`MATCH_PASSWORD`/`MATCH_GIT_BASIC_AUTHORIZATION`)
 - [ ] 🖥 初回 `bundle exec fastlane match appstore`(証明書/プロファイル生成)
-- [ ] 🖥 `bundle install` 後に **`Gemfile.lock` をコミット**(CI 再現性。Linux で生成不可のため Mac で)
+- [x] 🖥 `bundle install` 後に **`Gemfile.lock` をコミット**(CI 再現性。Linux で生成不可のため Mac で)
+      — 2026-07-28 Ruby 3.3.12 / bundler 2.5.22 で生成、fastlane 2.237.0 固定 (PR #100)
 - [ ] 🖥 `submil` スキームが **Shared** か確認(共有スキームは PR 同梱済み ✅)
 - [ ] ⚠️ CI の Xcode: 本プロジェクトは iOS 26.5 / Xcode 26 系。GitHub ホストランナーに対応 Xcode が
       載るまで `beta` のビルドは失敗し得る → **Mac ローカル実行** or **self-hosted ランナー**
