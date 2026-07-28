@@ -118,8 +118,15 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [ ] 🌐 撮影済みスクショを ASC へ反映 — **`bundle exec fastlane upload_screenshots`**
       (専用レーンが `./fastlane/screenshots` から `skip_screenshots: false` でアップロード。Deliverfile の
       `skip_screenshots(true)` はメタデータ専用レーン `upload_metadata` 用の既定なので変更不要)。
-      ※ 実行には ASC API Key (§7 Secrets) が必要 → 未発行のためブロック中。
+      ※ ASC API Key は発行済み ✅。ただし後述の `No data` 問題が解けるまで保留。
       ※ PNG は `.gitignore` により非コミット(再生成可能な成果物として ASC へ直送する設計)。
+
+> ⚠️ **既知の問題: `upload_metadata` / `upload_screenshots` が `No data` で失敗する** (2026-07-29)
+> deliver が ASC の **1.0 の ja ローカライズ**を更新する段で `spaceship .../model.rb:82 No data` を出す。
+> fastlane issue [#20538](https://github.com/fastlane/fastlane/issues/20538)「Uploading the very first
+> version of my app yields `No data`」と同一。ビルドを TestFlight に上げても解消しなかった。
+> **回避策**: ASC の 1.0 バージョンページで説明欄などに手入力して一度「保存」し、ja ローカライズの
+> レコードを実体化させてから再実行する。以降のバージョンでは発生しない見込み。
 
 ## 6. App Store Connect 設定 (#54) 🌐 — `app-store-listing.md`
 
@@ -134,9 +141,11 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 7. fastlane / CI (#55) — `fastlane.md`
 
-- [ ] 🌐 App Store Connect API Key 発行 → GitHub Secrets(`ASC_KEY_ID`/`ASC_ISSUER_ID`/`ASC_KEY_CONTENT`)
-- [ ] 🌐 証明書用 **private リポ**作成 → Secrets(`MATCH_GIT_URL`/`MATCH_PASSWORD`/`MATCH_GIT_BASIC_AUTHORIZATION`)
-- [ ] 🖥 初回 `bundle exec fastlane match appstore`(証明書/プロファイル生成)
+- [x] 🌐 App Store Connect API Key 発行 → **ローカル `.env` に設定済み** (2026-07-29, 認証確認済み)
+      ※ GitHub Secrets への登録は CI で回す場合に別途必要
+- [x] 🌐 証明書用 **private リポ**作成 (`hikarucode1/submil-certs`) → `.env` に `MATCH_GIT_URL`/`MATCH_PASSWORD`
+- [x] 🖥 初回 `bundle exec fastlane certificates`(match で証明書/プロファイル生成)
+      — app + widget 両 App ID 分を生成し private リポへ保存済み (2026-07-29)
 - [x] 🖥 `bundle install` 後に **`Gemfile.lock` をコミット**(CI 再現性。Linux で生成不可のため Mac で)
       — 2026-07-28 Ruby 3.3.12 / bundler 2.5.22 で生成、fastlane 2.237.0 固定 (PR #100)
 - [ ] 🖥 `submil` スキームが **Shared** か確認(共有スキームは PR 同梱済み ✅)
@@ -146,8 +155,10 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 8. TestFlight (#56)
 
-- [ ] 🖥 `bundle exec fastlane beta`(archive → ipa → TestFlight アップロード)
-- [ ] 🌐 内部テスターを招待して動作確認
+- [x] 🖥 `bundle exec fastlane beta`(archive → ipa → TestFlight アップロード)
+      — 2026-07-29 成功。**バージョン 1.0 / ビルド 1 が「提出準備完了」**で TestFlight に表示。
+      dSYM も同レーンから Crashlytics へアップロード済み。
+- [ ] 🌐 内部テスターを招待して動作確認(TestFlight > 内部テスト でグループ作成 → メール招待)
 - [ ] 🌐 外部ベータ申請(必要なら)
 
 ## 9. テスト / 検証
