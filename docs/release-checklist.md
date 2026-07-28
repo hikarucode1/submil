@@ -115,18 +115,19 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
       — 2026-07-28 ja 5 枚 (01-Home / 02-AddSubscription / 03-Detail / 04-Evaluation / 05-Result) を
       `fastlane/screenshots/ja/` に出力。撮影 UITest `SubmilScreenshots` が緑で通ることを確認済み。
       ※ 5.5" (iPhone 8 Plus) はオプション枠。撮る場合は iOS 16 系ランタイム追加後に Snapfile へ追記。
-- [ ] 🌐 撮影済みスクショを ASC へ反映 — **`bundle exec fastlane upload_screenshots`**
+- [x] 🌐 撮影済みスクショを ASC へ反映 — **`bundle exec fastlane upload_screenshots`**
+      — 2026-07-29 成功。ja 5 枚を 1.0 へアップロード済み。
       (専用レーンが `./fastlane/screenshots` から `skip_screenshots: false` でアップロード。Deliverfile の
       `skip_screenshots(true)` はメタデータ専用レーン `upload_metadata` 用の既定なので変更不要)。
-      ※ ASC API Key は発行済み ✅。ただし後述の `No data` 問題が解けるまで保留。
       ※ PNG は `.gitignore` により非コミット(再生成可能な成果物として ASC へ直送する設計)。
 
-> ⚠️ **既知の問題: `upload_metadata` / `upload_screenshots` が `No data` で失敗する** (2026-07-29)
-> deliver が ASC の **1.0 の ja ローカライズ**を更新する段で `spaceship .../model.rb:82 No data` を出す。
-> fastlane issue [#20538](https://github.com/fastlane/fastlane/issues/20538)「Uploading the very first
-> version of my app yields `No data`」と同一。ビルドを TestFlight に上げても解消しなかった。
-> **回避策**: ASC の 1.0 バージョンページで説明欄などに手入力して一度「保存」し、ja ローカライズの
-> レコードを実体化させてから再実行する。以降のバージョンでは発生しない見込み。
+> ℹ️ **`upload_metadata` の `No data` について** (2026-07-29)
+> deliver が最後に `spaceship .../model.rb:82 No data` を出して exit 1 になるが、
+> **ASC 側にはメタデータが正しく反映されている**(概要 / プロモーション用テキスト / キーワード /
+> サポート URL を画面で確認済み)。fastlane issue
+> [#20538](https://github.com/fastlane/fastlane/issues/20538) と同じ、初回バージョンで出る
+> 後処理側のエラーと見られる。**書き込み自体は成功しているので、エラーが出ても ASC を確認すること。**
+> なお `upload_screenshots` は同条件でも exit 0 で完走する。
 
 ## 6. App Store Connect 設定 (#54) 🌐 — `app-store-listing.md`
 
@@ -173,12 +174,14 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 申請前ゲート (これが揃うまで提出しない)
 
-- [ ] **サポート URL** を ASC に設定済み(ページは公開・疎通確認済み ✅、`support_url.txt` 設定済み ✅)
-- [ ] **プライバシーポリシー URL** が公開・疎通済みで ASC に設定済み
+- [x] **サポート URL** を ASC に設定済み — `upload_metadata` で反映、ASC 画面で確認済み (2026-07-29)
+- [x] **プライバシーポリシー URL** が公開・疎通済みで ASC に設定済み
 - [x] **本番 AdMob ID**(unitID / applicationID / `GADApplicationIdentifier`)がプレースホルダーでない
 - [x] **`GoogleService-Info.plist`** がバンドルに含まれている
-- [ ] **アプリアイコン**(全サイズ)と**スクリーンショット**が登録済み
-- [ ] 年齢制限レーティング / カテゴリ / データ プライバシー申告 / 輸出コンプライアンス 完了
+- [x] **アプリアイコン**(全サイズ)と**スクリーンショット**が登録済み
+      — アイコンは Assets 登録済み、スクショは ja 5 枚を ASC へアップロード済み (2026-07-29)
+- [x] 年齢制限レーティング / カテゴリ / データ プライバシー申告 / 輸出コンプライアンス 完了
+      — カテゴリ(ファイナンス/ユーティリティ)は ASC 設定済み、他はユーザーが ASC で入力済み (2026-07-29)
 - [x] Release ビルドを実機で一通り動作確認(広告表示 / ATT / 各機能)
       — 2026-07-29 iPhone 17e で実施。ATT ✅ / 広告統合 ✅(本番は no fill 待ち)/ Crashlytics ✅ / 主要フロー ✅
 
