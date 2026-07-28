@@ -55,12 +55,18 @@ Xcode で `submil.xcodeproj` を開き **File > Add Package Dependencies…**。
 
 ### 推奨: カスタム Info.plist を併用 (生成キーとマージ)
 
-**雛形は生成済み → [`submil/Info.plist`](../../submil/Info.plist)** (下記 2 キーのみ。他キーは生成側が自動マージ)。
+**雛形は生成済み → [`Config/submil-Info.plist`](../../Config/submil-Info.plist)** (下記 2 キーのみ。他キーは生成側が自動マージ)。
 Xcode 側の作業は **INFOPLIST_FILE を指すだけ**:
 
-1. `submil/Info.plist` が `submil/` 直下にある (生成済み)。
-2. Target `submil` > Build Settings > **`INFOPLIST_FILE = submil/Info.plist`** を設定。
+1. 雛形は `Config/submil-Info.plist` にある (生成済み)。
+2. Target `submil` > Build Settings > **`INFOPLIST_FILE = Config/submil-Info.plist`** を設定。
    `GENERATE_INFOPLIST_FILE = YES` は**そのまま**にする (Xcode がカスタム plist に生成キーをマージ)。
+
+> ⚠️ **`submil/` 配下に置いてはいけない**。`submil/` は同期グループ
+> (`PBXFileSystemSynchronizedRootGroup`) で全ファイルが自動的にリソースへコピーされるため、
+> Info.plist を置くと「リソースとしてのコピー」と「INFOPLIST_FILE としての生成」が衝突し
+> `Multiple commands produce .../submil.app/Info.plist` でビルドが失敗する。
+> 同期グループ外 (`Config/`) に置くことで回避している。
 
 雛形に含まれるキー:
 

@@ -15,13 +15,12 @@ enum AdConfig {
     /// Google 公式のテスト用アプリ ID (`Info.plist` の `GADApplicationIdentifier` に設定する値)。
     static let testApplicationID = "ca-app-pub-3940256099942544~1458002511"
 
-    /// 本番のバナー広告ユニット ID。AdMob 管理画面で発行後に置換する。
-    /// TODO(#45): 本番値へ差し替え。
-    static let productionBannerUnitID = "ca-app-pub-0000000000000000/0000000000"
+    /// 本番のバナー広告ユニット ID (AdMob 管理画面で発行済み)。
+    static let productionBannerUnitID = "ca-app-pub-6546223385891550/4415833247"
 
-    /// 本番のアプリ ID。AdMob 管理画面で発行後に置換し、`Info.plist` にも反映する。
-    /// TODO(#45): 本番値へ差し替え。
-    static let productionApplicationID = "ca-app-pub-0000000000000000~0000000000"
+    /// 本番のアプリ ID (AdMob 管理画面で発行済み)。
+    /// `submil/Info.plist` の `GADApplicationIdentifier` と同じ値を保つこと。
+    static let productionApplicationID = "ca-app-pub-6546223385891550~5066304006"
 
     /// DEBUG ビルドではテスト広告を強制する。
     static var useTestAds: Bool {

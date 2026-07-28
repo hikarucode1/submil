@@ -3,9 +3,13 @@
 <!--
   submil アプリターゲット用カスタム Info.plist (docs/setup/xcode-integration.md 手順③)
 
-  このターゲットは GENERATE_INFOPLIST_FILE = YES のまま INFOPLIST_FILE = submil/Info.plist を
-  指定して使う。標準キー (CFBundle*, NSUserTrackingUsageDescription, ITSAppUsesNonExemptEncryption 等)
+  このターゲットは GENERATE_INFOPLIST_FILE = YES のまま INFOPLIST_FILE = Config/submil-Info.plist
+  を指定して使う。標準キー (CFBundle*, NSUserTrackingUsageDescription, ITSAppUsesNonExemptEncryption 等)
   はビルド設定 (INFOPLIST_KEY_*) から自動マージされるため、ここには**自動生成できないキーのみ**を置く:
+
+  ⚠️ このファイルを submil/ 配下へ移動しないこと。submil/ は同期グループで全ファイルが
+     リソースへ自動コピーされるため、Info.plist を置くと出力先が衝突しビルドが失敗する
+     (Multiple commands produce .../submil.app/Info.plist)。
     - GADApplicationIdentifier : 単一文字列だが AdMob 本番アプリ ID と一致させる必要があり手管理
     - SKAdNetworkItems         : 辞書配列のため INFOPLIST_KEY_ 方式では入れられない
 
@@ -19,7 +23,7 @@
 <plist version="1.0">
 <dict>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-6546223385891550~5066304006</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
