@@ -7,6 +7,28 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
 
 ---
 
+## 検証済み現状 (2026-07-28 コード実査)
+
+実コードと突き合わせた結果。以降の各節チェックボックスはこの結論に合わせて更新済み。
+
+**✅ 完了 (コードで確認)**
+- アプリアイコン登録済み (`AppIcon.appiconset`: light/dark/tinted + Contents.json)
+- 輸出コンプライアンス `INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO`
+- ATT 説明文 `NSUserTrackingUsageDescription`、共有スキーム `submil.xcscheme`、bundle id、`MARKETING_VERSION 1.0`
+- ストア文言 `fastlane/metadata/ja/*` 一式 (support_url / privacy_url 含む)、法務ページ HTTP 200
+
+**❌ 未着手 (＝本当の残作業。★は本チェックリスト旧版とのズレ)**
+- 🌐 AdMob 本番 ID 発行 / 🌐 Firebase 作成→`GoogleService-Info.plist` / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
+- 🖥 SPM `GoogleMobileAds`+`FirebaseAnalytics/Crashlytics` **未追加 ★**
+- 🖥 `GoogleService-Info.plist` **未配置 ★** / `GADApplicationIdentifier`・`SKAdNetworkItems` **未設定 ★**
+- 🖥 `AdConfig` production ID がプレースホルダ (`0000…`) のまま ★
+- 🖥 Crashlytics dSYM アップロード Run Script **未追加 ★**
+- 🖥 スクショ未撮影 (`Deliverfile` は `skip_screenshots(true)`) / `Gemfile.lock` **未コミット ★**
+
+**実行順 (クリティカルパス)**: AdMob/Firebase/ASC 発行(Web) → SPM 追加 + plist 配置 + ID 差し替え(Mac) → `match` → `beta` → TestFlight 招待
+
+---
+
 ## 0. PR マージ順
 
 RootView の `.task` を複数系統が編集するため、順序を守る (交差する系統は 2 つ目を手動解決)。
@@ -59,8 +81,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 4. アプリアイコン (#49) 🎨
 
-- [ ] 🎨 全サイズのアイコンを制作(1024pt マスター + 各サイズ)
-- [ ] 🖥 `Assets.xcassets/AppIcon` に登録
+- [x] 🎨 アイコン制作(light/dark/tinted, single-size 1024)
+- [x] 🖥 `Assets.xcassets/AppIcon` に登録済み (2026-07-28 確認)
 
 ## 5. スクリーンショット (#50)
 
