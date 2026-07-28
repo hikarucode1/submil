@@ -55,16 +55,19 @@ Xcode で `submil.xcodeproj` を開き **File > Add Package Dependencies…**。
 
 ### 推奨: カスタム Info.plist を併用 (生成キーとマージ)
 
-1. `submil/Info.plist` を新規作成し、下記 2 キーだけを記述 (他キーは生成側が自動マージ)。
+**雛形は生成済み → [`submil/Info.plist`](../../submil/Info.plist)** (下記 2 キーのみ。他キーは生成側が自動マージ)。
+Xcode 側の作業は **INFOPLIST_FILE を指すだけ**:
+
+1. `submil/Info.plist` が `submil/` 直下にある (生成済み)。
 2. Target `submil` > Build Settings > **`INFOPLIST_FILE = submil/Info.plist`** を設定。
    `GENERATE_INFOPLIST_FILE = YES` は**そのまま**にする (Xcode がカスタム plist に生成キーをマージ)。
 
-記述するキー:
+雛形に含まれるキー:
 
-| キー | 値 |
-| --- | --- |
-| `GADApplicationIdentifier` | 開発中: `ca-app-pub-3940256099942544~1458002511` (テスト用) / 本番: AdMob 発行値 |
-| `SKAdNetworkItems` | Google 提供の SKAdNetwork ID 一覧を辞書配列で。→ https://developers.google.com/admob/ios/quick-start#update_your_infoplist |
+| キー | 現在値 | リリース前 |
+| --- | --- | --- |
+| `GADApplicationIdentifier` | `ca-app-pub-3940256099942544~1458002511` (Google テスト用アプリ ID = DEBUG が即動く既定) | **AdMob 発行の本番アプリ ID (`~`付き) へ差し替え** (④の `productionApplicationID` と一致) |
+| `SKAdNetworkItems` | Google 公式推奨 50 件 (2026-07-28 取得) | 差し替え不要。SDK 更新時に [公式一覧](https://developers.google.com/admob/ios/quick-start#update_your_infoplist) と再同期 |
 
 > `NSUserTrackingUsageDescription` は #46 で pbxproj (`INFOPLIST_KEY_...`) に設定済み → 追加不要。→ [att.md](att.md)
 
