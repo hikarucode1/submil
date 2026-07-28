@@ -204,6 +204,7 @@
 				17457C352FC358FF009C756E /* Frameworks */,
 				17457C362FC358FF009C756E /* Resources */,
 				2D0BCA6A80FA594689DB9004 /* Embed Foundation Extensions */,
+				17DC39CD3018CCB90045531A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -339,6 +340,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		17DC39CD3018CCB90045531A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+				"$(SRCROOT)/submil/GoogleService-Info.plist",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Crashlytics dSYM upload (#48). -gsp で GoogleService-Info.plist を明示 (sandbox 内の探索に頼らない)。\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" -gsp \"${SRCROOT}/submil/GoogleService-Info.plist\" -p ios\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		17457C342FC358FF009C756E /* Sources */ = {
