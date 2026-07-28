@@ -26,13 +26,18 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
 - **Crashlytics dSYM アップロード Run Script を Build Phases に追加済み** (`-gsp` で plist 明示)
 - **`submilTests` 全 116 tests / 17 suites 緑** (2026-07-28 xcodebuild 確認、iOS 26.5 / iPhone 17)
 
-**❌ 未着手 (＝本当の残作業)** — Web コンソール / 実機 / 撮影 が中心
-- 🌐 Firebase DebugView で 5 イベント + テストクラッシュ受信確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
-- 🖥 実機で ATT ダイアログ 1 回・バナー表示・Crashlytics レポート到達を確認 (シミュレータ不可)
-- 🖥 スクショ未撮影 (`Deliverfile` は `skip_screenshots(true)`) — `Gemfile.lock` は **コミット済み** (PR #100)
+**✅ 実機検証 完了 (2026-07-29, iPhone 17e / iOS 26.5.2)**
+- ATT ダイアログ 1 回表示 ✅ / バナー統合 ✅ (Test Ad 確認。本番は no fill 待ち)
+- Crashlytics クラッシュ受信 + dSYM シンボリケート ✅ / 主要フロー ✅
+- 併せて **Release ビルドのブロッカーを 1 件修正** (Crashlytics Run Script のサンドボックス対応)
+
+**❌ 未着手 (＝本当の残作業)** — Web コンソール / 撮影アップロード が中心
+- 🌐 Firebase DebugView で 5 イベント送信を確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
+- 🌐 撮影済みスクショの ASC 反映 (`upload_screenshots`、ASC API Key 待ち)
+- 🖥 iPad でのバナー高さクリップ確認 (任意) / 本番広告の実配信確認 (公開後)
 
 **実行順 (クリティカルパス)**: ~~AdMob/Firebase 発行 → SPM 追加 + plist 配置 + ID 差し替え~~ **(完了)**
-→ ASC レコード発行(Web) + Secrets → `match` → 実機/DebugView 検証 → スクショ → `beta` → TestFlight 招待
+→ ~~実機検証~~ **(完了)** → ASC レコード発行(Web) + Secrets → `match` → スクショ upload → `beta` → TestFlight 招待
 
 > 🖥 **手順2 (Xcode 組み込み) の実行ランブック** → [`docs/setup/xcode-integration.md`](setup/xcode-integration.md)
 > (SPM→plist→Info.plist→AdConfig→dSYM→検証 を順序付きでまとめた実務手順)
@@ -64,8 +69,12 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [x] 🌐 AdMob 管理画面で本番アプリ ID / バナー ユニット ID を発行 (`ca-app-pub-6546223385891550`)
 - [x] 🖥 `AdConfig.productionApplicationID` / `productionBannerUnitID` を本番値へ差し替え
 - [x] 🖥 `Info.plist`(`Config/submil-Info.plist`)に `GADApplicationIdentifier` と `SKAdNetworkItems` を追加
-- [ ] 🖥 実機で初回起動時に **ATT ダイアログが 1 回だけ**表示されるか確認(active 遷移時)
-- [ ] 🖥 実機でバナー表示を確認(iPhone / **iPad で高さクリップされない**こと、Release でテスト広告でないこと)
+- [x] 🖥 実機で初回起動時に **ATT ダイアログが 1 回だけ**表示されるか確認(active 遷移時)
+      — 2026-07-29 iPhone 17e / iOS 26.5.2 で確認。※端末の「Appからのトラッキング要求を許可」が
+      OFF だと iOS が自動拒否しダイアログは出ない(検証時は ON + アプリ再インストールで状態リセット)
+- [x] 🖥 実機でバナー表示を確認 — DEBUG(テスト ID)で **Test Ad 表示を確認**、統合・レイアウトとも正常。
+      Release(本番 ID)では枠が空だったが、これは**新規ユニットの no fill**(在庫待ち)であり不具合ではない。
+      配信開始後に本番広告が出ることを再確認すること。※ iPad での高さクリップ確認は未実施
 
 > `NSUserTrackingUsageDescription` は pbxproj に設定済み ✅。本番 ID がプレースホルダーのままだと
 > Release ではクラッシュせず**バナー非表示**にフォールバックする(収益ゼロに気付きにくいので上記チェック必須)。
@@ -78,8 +87,14 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [ ] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認
        (subscription_added / evaluation_completed / cancellation_completed / affiliate_clicked / shared)
 - [x] 🖥 Crashlytics: dSYM アップロードの Run Script を Build Phases に追加(`-gsp` で plist 明示)
-- [ ] 🖥 Release の Debug Information Format = `DWARF with dSYM File` を確認
-- [ ] 🖥 テストクラッシュ(`CrashReporter.testCrash()`)→ 再起動 → Console にレポート確認
+- [x] 🖥 Release の Debug Information Format = `DWARF with dSYM File` を確認
+      — `showBuildSettings` で Release=`dwarf-with-dsym` / Debug=`dwarf` を確認 (2026-07-29)
+- [x] 🖥 テストクラッシュ → 再起動 → Crashlytics にレポート確認 (2026-07-29 実機)
+      — Release ビルドで意図的クラッシュ → 再起動送信 → Firebase Console に
+      **`closure #2 in RootView.body.getter` / `RootView.swift:39` / `EXC_BREAKPOINT`** として
+      **シンボリケート済みで受信を確認**。dSYM は Run Script が自動アップロード(UUID 一致を確認)。
+      ⚠️ 検証は必ず **Release ビルド**で行うこと。Debug は `dwarf` で dSYM を生成せず、
+      レポートは届いても「未処理のクラッシュ (dSYM 見つからない)」のまま可視化されない。
 
 ## 3. 法務ページ公開 (#52 / #53) — `submil-content`
 
@@ -139,7 +154,9 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 - [x] 🖥 `#68` の `ServiceCatalogBundleTests` を含む全テストを Mac / xcodebuild で実行(緑を確認)
       — 2026-07-28 `xcodebuild test -only-testing:submilTests`(iPhone 17 / iOS 26.5)で **116 tests / 17 suites 全緑**
-- [ ] 🖥 設定タブ: 利用規約 / プライバシーポリシーがアプリ内ブラウザで開く、バージョン表示(#57)
+- [x] 🖥 設定タブ: 利用規約 / プライバシーポリシーがアプリ内ブラウザで開く、バージョン表示(#57)
+      — 2026-07-29 実機で確認。併せてサブスク追加 / 「これ要る?」評価→結果 / ホーム合計表示も動作確認済み。
+      ※ 節約シェア (`SavingsShareView`) は入口の「節約履歴」タブが**実装予定**のため到達不可(仕様どおり)
 
 ---
 
@@ -151,7 +168,8 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [x] **`GoogleService-Info.plist`** がバンドルに含まれている
 - [ ] **アプリアイコン**(全サイズ)と**スクリーンショット**が登録済み
 - [ ] 年齢制限レーティング / カテゴリ / データ プライバシー申告 / 輸出コンプライアンス 完了
-- [ ] Release ビルドを実機で一通り動作確認(広告表示 / ATT / 各機能)
+- [x] Release ビルドを実機で一通り動作確認(広告表示 / ATT / 各機能)
+      — 2026-07-29 iPhone 17e で実施。ATT ✅ / 広告統合 ✅(本番は no fill 待ち)/ Crashlytics ✅ / 主要フロー ✅
 
 ## 残 GitHub Issue 対応表
 
