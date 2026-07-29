@@ -35,7 +35,7 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
   Run Script から **fastlane `beta` レーンへ移行**した (Run Script 方式は archive で解決不能なため放棄)
 
 **❌ 未着手 (＝本当の残作業)** — Web コンソール / 撮影アップロード が中心
-- 🌐 ASC レコード (#54) / 🌐 各種 Secrets
+- 🌐 EU トレーダーステータス (DSA、EU 配信する場合) / 🌐 CI 用 GitHub Secrets (Mac ローカル運用なら不要)
 - 🌐 撮影済みスクショの ASC 反映 (`upload_screenshots`、ASC API Key 待ち)
 - 🖥 iPad でのバナー高さクリップ確認 (任意) / 本番広告の実配信確認 (公開後)
 
@@ -146,14 +146,21 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 6. App Store Connect 設定 (#54) 🌐 — `app-store-listing.md`
 
-- [ ] 🌐 App レコード作成(bundle id / SKU / プライマリ言語)
-- [ ] 🌐 **サポート URL(必須)** を設定 — ページは公開済み ✅・`fastlane/metadata/ja/support_url.txt`
-      にも設定済み ✅。deliver を使わず手動設定する場合は
-      `https://hikarucode1.github.io/submil-content/support.html` を ASC に入力
-- [ ] 🌐 プライバシーポリシー URL を設定(#52 の Pages URL)
-- [ ] 🌐 カテゴリ(主: ファイナンス / 副: ユーティリティ)、年齢制限レーティング
-- [ ] 🌐 App のプライバシー(データ収集: 使用状況/診断/識別子 = Firebase/AdMob)を申告
-- [ ] 🌐 輸出コンプライアンス(標準暗号のみ = 該当なし想定)
+- [x] 🌐 App レコード作成済み(Apple ID `6795426837` / SKU `submil-1000` / プライマリ言語 日本語)
+- [x] 🌐 **サポート URL** 設定済み — `https://hikarucode1.github.io/submil-content/support.html`
+      (fastlane メタデータ反映済み。version 1.0 の App Store 情報で確認)
+- [x] 🌐 プライバシーポリシー URL 設定済み — `https://hikarucode1.github.io/submil-content/privacy-policy.html`
+- [x] 🌐 カテゴリ(主: ファイナンス / 副: ユーティリティ)設定済み、**年齢制限レーティング = 4+** 設定済み
+      (2026-07-30。7 ステップ質問票を全項目「なし」で回答。広告のみ「はい」= AdMob バナー表示のため)
+- [x] 🌐 App のプライバシー **公開済み**(2026-07-30)— 収集データ 5 種を申告:
+      広告データ / 製品の操作 / デバイス ID(=トラッキング用途)、クラッシュ / パフォーマンスデータ(=アプリ機能)。
+      Firebase Analytics + Crashlytics + AdMob の実態と一致。
+- [x] 🌐 輸出コンプライアンス — `ITSAppUsesNonExemptEncryption = NO`(pbxproj 設定済み)で対応。
+      標準暗号のみのため ASC の暗号化書類アップロードは不要。ビルド提出時に Info.plist 値で自動回答される。
+- [ ] ⚠️ 🌐 **EU トレーダーステータス (DSA)** — EU 配信するなら事業者情報(氏名/住所/電話)の登録が必須。
+      未登録だと EU App Store から削除され得る。**「ビジネス」画面で本人が登録**する(個人情報のため要手動)。
+      EU 配信しない場合は対象国から EU を除外する判断も可。
+- [ ] ✍️ 🌐 **著作権 (Copyright)** が version ページで空欄。任意項目だが、事業者名確定(§3)に合わせて入れるか判断。
 
 ## 7. fastlane / CI (#55) — `fastlane.md`
 
