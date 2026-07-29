@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		037D27C8A52C2AAC80CF7C14 /* WidgetSharedConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E162DD26AEAE6F1E0C77331C /* WidgetSharedConfig.swift */; };
+		1768A3953018990C000B7C78 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 1768A3943018990C000B7C78 /* GoogleMobileAds */; };
+		1768A39830189A13000B7C78 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1768A39730189A13000B7C78 /* FirebaseAnalytics */; };
+		1768A39A30189A13000B7C78 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1768A39930189A13000B7C78 /* FirebaseCrashlytics */; };
 		26DB7551CE2CF002B5AD9C77 /* SubscriptionSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBFFDD89D1BAF1C64435D5 /* SubscriptionSnapshot.swift */; };
 		283B15B9500A3A822B388D58 /* WidgetDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A738A44EE0BFE1DAF359CD /* WidgetDataStore.swift */; };
 		49694A13E6B25B4A96B5F853 /* submilWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EF4C2BD3DDE57CB6278D9109 /* submilWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -71,22 +74,16 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17457C3A2FC358FF009C756E /* submil */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = submil;
 			sourceTree = "<group>";
 		};
 		17457C4A2FC35903009C756E /* submilTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = submilTests;
 			sourceTree = "<group>";
 		};
 		17457C542FC35903009C756E /* submilUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = submilUITests;
 			sourceTree = "<group>";
 		};
@@ -97,6 +94,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1768A39A30189A13000B7C78 /* FirebaseCrashlytics in Frameworks */,
+				1768A39830189A13000B7C78 /* FirebaseAnalytics in Frameworks */,
+				1768A3953018990C000B7C78 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,7 +166,6 @@
 				D3ECB6E4A7D3EFD2B4D06F7C /* SubmilWidgetView.swift */,
 				86637DD0310E41122B07D412 /* submilWidget.entitlements */,
 			);
-			name = submilWidget;
 			path = submilWidget;
 			sourceTree = "<group>";
 		};
@@ -293,6 +292,10 @@
 			);
 			mainGroup = 17457C2F2FC358FF009C756E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1768A3933018990C000B7C78 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				1768A39630189A13000B7C78 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 17457C392FC358FF009C756E /* Products */;
 			projectDirPath = "";
@@ -526,6 +529,7 @@
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/submil-Info.plist";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "広告をあなたの興味に合わせて最適化するために使用します。許可しなくてもアプリはそのままご利用いただけます。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -561,6 +565,7 @@
 				DEVELOPMENT_TEAM = 4BSH37BHRC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/submil-Info.plist";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "広告をあなたの興味に合わせて最適化するために使用します。許可しなくてもアプリはそのままご利用いただけます。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -781,6 +786,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1768A3933018990C000B7C78 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.7.0;
+			};
+		};
+		1768A39630189A13000B7C78 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.16.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1768A3943018990C000B7C78 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1768A3933018990C000B7C78 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		1768A39730189A13000B7C78 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1768A39630189A13000B7C78 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		1768A39930189A13000B7C78 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1768A39630189A13000B7C78 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 17457C302FC358FF009C756E /* Project object */;
 }

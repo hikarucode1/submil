@@ -26,6 +26,12 @@ enum AdMobStarter {
         #if canImport(GoogleMobileAds)
         guard !hasStarted else { return }
         hasStarted = true
+        // AdMob 独自のクラッシュレポート (GADRegisterSignalHandlers) を無効化する (#48)。
+        // これを呼ばないと GMA SDK がシグナル/例外ハンドラを登録し、Firebase Crashlytics の
+        // ハンドラと競合してクラッシュ (fatalError = SIGILL/SIGTRAP 等) が Crashlytics に届かない
+        // (起動ログの "non-Crashlytics handler ... will interfere with reporting" 警告の実害)。
+        // start() 前に呼ぶこと。広告配信には影響しない。
+        MobileAds.shared.disableSDKCrashReporting()
         MobileAds.shared.start(completionHandler: nil)
         #endif
     }

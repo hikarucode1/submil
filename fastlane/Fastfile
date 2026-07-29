@@ -25,6 +25,19 @@ platform :ios do
     )
   end
 
+  # Crashlytics の upload-symbols バイナリの場所を解決する (#48)。
+  # SPM の checkout 配下にあり、その親 DerivedData 名はプロジェクトごとのハッシュを含むため
+  # 固定パスを書けない。ローカルの derivedData 指定と既定の DerivedData の両方を探す。
+  private_lane :crashlytics_upload_symbols_binary do
+    candidates = Dir.glob(File.expand_path("~/Library/Developer/Xcode/DerivedData/submil-*/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols")) +
+                 Dir.glob("build/*/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols")
+    binary = candidates.select { |p| File.executable?(p) }
+                       .max_by { |p| File.mtime(p) }
+    UI.user_error!("upload-symbols が見つかりません。一度ビルドして SPM の checkout を作成してください。") if binary.nil?
+    UI.message("upload-symbols: #{binary}")
+    binary
+  end
+
   desc "証明書・プロビジョニングプロファイルを match で同期する"
   lane :certificates do
     key = asc_api_key
@@ -61,6 +74,19 @@ platform :ios do
           WIDGET_IDENTIFIER => "match AppStore #{WIDGET_IDENTIFIER}"
         }
       }
+    )
+
+    # Crashlytics へ dSYM をアップロードする (#48)。
+    # Build Phases の Run Script 方式は archive 時に SPM checkout のパスが解決できず
+    # (ENABLE_USER_SCRIPT_SANDBOXING=YES 下で xcfilelist を読めない) archive が失敗するため、
+    # ビルド成果物の dSYM を fastlane から送る方式にしている。
+    #
+    # upload-symbols は SPM の checkout 内にあり、その親 (DerivedData) はハッシュ付きで
+    # 環境ごとに異なるため、build_app が使った derived data から動的に解決する。
+    upload_symbols_to_crashlytics(
+      dsym_path: lane_context[SharedValues::DSYM_OUTPUT_PATH],
+      gsp_path: "submil/GoogleService-Info.plist",
+      binary_path: crashlytics_upload_symbols_binary
     )
 
     upload_to_testflight(

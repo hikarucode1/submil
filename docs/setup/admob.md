@@ -29,7 +29,7 @@ Xcode で `submil.xcodeproj` を開き、**File > Add Package Dependencies…**:
 
 | キー | 値 |
 | --- | --- |
-| `GADApplicationIdentifier` | 開発中は `ca-app-pub-3940256099942544~1458002511`(テスト用アプリ ID)。本番は AdMob 発行値 |
+| `GADApplicationIdentifier` | **本番 ID `ca-app-pub-6546223385891550~5066304006` を設定済み** (`Config/submil-Info.plist`)。`AdConfig.productionApplicationID` と同値を保つこと。DEBUG は `AdConfig.useTestAds` でテスト広告になるため、この値をテスト用に戻す必要はない |
 | `SKAdNetworkItems` | Google 提供の SKAdNetwork ID 一覧(下記リンク参照)を配列で追加 |
 | `NSUserTrackingUsageDescription` | **#46 で対応済み**。pbxproj の `INFOPLIST_KEY_NSUserTrackingUsageDescription` に設定済みなので手動追加は不要。詳細は [att.md](att.md) |
 
