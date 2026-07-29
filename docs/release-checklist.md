@@ -35,7 +35,7 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
   Run Script から **fastlane `beta` レーンへ移行**した (Run Script 方式は archive で解決不能なため放棄)
 
 **❌ 未着手 (＝本当の残作業)** — Web コンソール / 撮影アップロード が中心
-- 🌐 Firebase DebugView で 5 イベント送信を確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
+- 🌐 ASC レコード (#54) / 🌐 各種 Secrets
 - 🌐 撮影済みスクショの ASC 反映 (`upload_screenshots`、ASC API Key 待ち)
 - 🖥 iPad でのバナー高さクリップ確認 (任意) / 本番広告の実配信確認 (公開後)
 
@@ -94,7 +94,7 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
       許可 bundle ID に `com.hikaru.failuremuseum.submil` と `com.hikaru.failuremuseum.submil.submilWidget` を登録した。
       - ⚠️ **Browser key (auto created by Firebase)** は制限なしのまま残存。submil に Web アプリはなく plist も
         このキーを使わないため実害は低いが、未使用の無制限キー。将来は削除 or 制限を検討する。
-- [ ] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認
+- [x] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認 — **実機で確認済み**
        (subscription_added / evaluation_completed / cancellation_completed / affiliate_clicked / shared)
 - [x] 🖥 Crashlytics: dSYM アップロードを **fastlane `beta` レーン**に組み込み
       (`upload_symbols_to_crashlytics`。`upload-symbols` のパスは SPM checkout から動的解決)
