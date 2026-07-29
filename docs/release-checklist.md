@@ -23,13 +23,16 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
 - **`GoogleService-Info.plist` を `submil/` 配下に配置・コミット済み**
 - **`Config/submil-Info.plist` に本番 `GADApplicationIdentifier` (`…~5066304006`) + `SKAdNetworkItems` 一式**
 - **`AdConfig` の `productionApplicationID` / `productionBannerUnitID` が実値** (プレースホルダ解消済み)
-- **Crashlytics dSYM アップロード Run Script を Build Phases に追加済み** (`-gsp` で plist 明示)
+- **Crashlytics dSYM アップロードは fastlane `beta` レーンから実行** (`upload_symbols_to_crashlytics`)。
+  Build Phases の Run Script 方式は archive で壊れるため**採用していない** (理由は §2 と
+  [`xcode-integration.md`](setup/xcode-integration.md) ⑤ を参照)。
 - **`submilTests` 全 116 tests / 17 suites 緑** (2026-07-28 xcodebuild 確認、iOS 26.5 / iPhone 17)
 
 **✅ 実機検証 完了 (2026-07-29, iPhone 17e / iOS 26.5.2)**
 - ATT ダイアログ 1 回表示 ✅ / バナー統合 ✅ (Test Ad 確認。本番は no fill 待ち)
 - Crashlytics クラッシュ受信 + dSYM シンボリケート ✅ / 主要フロー ✅
-- 併せて **Release ビルドのブロッカーを 1 件修正** (Crashlytics Run Script のサンドボックス対応)
+- 併せて **Release/archive のブロッカーを解消**: Crashlytics dSYM の送信を Build Phases の
+  Run Script から **fastlane `beta` レーンへ移行**した (Run Script 方式は archive で解決不能なため放棄)
 
 **❌ 未着手 (＝本当の残作業)** — Web コンソール / 撮影アップロード が中心
 - 🌐 Firebase DebugView で 5 イベント送信を確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
@@ -84,9 +87,18 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [x] 🌐 Firebase プロジェクト作成 + iOS アプリ登録(bundle id `com.hikaru.failuremuseum.submil`)
 - [x] 🖥 `GoogleService-Info.plist` を `submil/` 配下に配置(同期グループで自動同梱)
 - [x] 🖥 SPM で `FirebaseAnalytics` + `FirebaseCrashlytics` を追加
+- [ ] 🌐 **Firebase API キー制限** — `submil/GoogleService-Info.plist` は PUBLIC リポにコミットしている。
+      クライアント構成ファイルなので秘密ではないが、含まれる `API_KEY` (`AIzaSy…`) を無制限のままにすると
+      第三者が同 Firebase プロジェクトの API を叩ける。**GCP Console > API とサービス > 認証情報**で
+      該当キーに**アプリケーションの制限 = iOS アプリ (`com.hikaru.failuremuseum.submil`)** を設定すること。
 - [ ] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認
        (subscription_added / evaluation_completed / cancellation_completed / affiliate_clicked / shared)
-- [x] 🖥 Crashlytics: dSYM アップロードの Run Script を Build Phases に追加(`-gsp` で plist 明示)
+- [x] 🖥 Crashlytics: dSYM アップロードを **fastlane `beta` レーン**に組み込み
+      (`upload_symbols_to_crashlytics`。`upload-symbols` のパスは SPM checkout から動的解決)
+      ⚠️ **Build Phases の Run Script 方式は採用しない**。`ENABLE_USER_SCRIPT_SANDBOXING=YES` 下では
+      input 宣言が必須だが、SPM checkout への相対パスが通常ビルドと archive で深さが異なり
+      (`BUILD_DIR` が `<DD>/Build/Products` と `.../ArchiveIntermediates/...` になる)、
+      単一の相対パスで両立できず archive が `Unable to load contents of file list` で失敗する。
 - [x] 🖥 Release の Debug Information Format = `DWARF with dSYM File` を確認
       — `showBuildSettings` で Release=`dwarf-with-dsym` / Debug=`dwarf` を確認 (2026-07-29)
 - [x] 🖥 テストクラッシュ → 再起動 → Crashlytics にレポート確認 (2026-07-29 実機)

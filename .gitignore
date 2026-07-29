@@ -22,7 +22,10 @@ DerivedData/
 .build/
 Packages/
 Package.pins
-Package.resolved
+# Package.resolved は**コミットする** (アプリ配布物のためビルド再現性が要る)。
+# SPM の要求は upToNextMajorVersion (GoogleMobileAds 13.7.0 / firebase-ios-sdk 12.16.0) で
+# 除外すると CI や新規チェックアウトで解決バージョンが浮動し、Gemfile.lock で塞いだ
+# 再現性の穴が SDK 側で開いたままになる。ライブラリ配布なら除外が定石だがここはアプリ。
 
 ## CocoaPods
 Pods/
@@ -45,8 +48,12 @@ vendor/bundle/
 
 # Firebase
 GoogleService-Info.plist.example
-# Note: keep real GoogleService-Info.plist out of repo only if it contains secrets;
-# for client config files, Firebase generally allows committing them.
+# GoogleService-Info.plist は**コミットする**方針 (submil/ 配下に配置済み)。
+# これはクライアント構成ファイルでアプリバイナリに同梱される前提のもの。秘密鍵ではない。
+# ただし本リポジトリは PUBLIC のため、含まれる API_KEY (AIzaSy...) には
+# GCP Console でアプリケーション制限 (iOS bundle ID = com.hikaru.failuremuseum.submil) を
+# かけること。制限が無いと第三者が同 Firebase プロジェクトの API を叩ける。
+# 参照: docs/release-checklist.md の「Firebase API キー制限」項目。
 
 # Secrets / credentials
 *.p12

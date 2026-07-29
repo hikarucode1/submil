@@ -72,7 +72,7 @@ Xcode 側の作業は **INFOPLIST_FILE を指すだけ**:
 
 | キー | 現在値 | リリース前 |
 | --- | --- | --- |
-| `GADApplicationIdentifier` | `ca-app-pub-3940256099942544~1458002511` (Google テスト用アプリ ID = DEBUG が即動く既定) | **AdMob 発行の本番アプリ ID (`~`付き) へ差し替え** (④の `productionApplicationID` と一致) |
+| `GADApplicationIdentifier` | `ca-app-pub-6546223385891550~5066304006` (**本番アプリ ID 設定済み** 2026-07-28) | 差し替え不要。④の `productionApplicationID` と**同じ値を保つ**こと |
 | `SKAdNetworkItems` | Google 公式推奨 50 件 (2026-07-28 取得) | 差し替え不要。SDK 更新時に [公式一覧](https://developers.google.com/admob/ios/quick-start#update_your_infoplist) と再同期 |
 
 > `NSUserTrackingUsageDescription` は #46 で pbxproj (`INFOPLIST_KEY_...`) に設定済み → 追加不要。→ [att.md](att.md)
@@ -92,7 +92,15 @@ static let productionApplicationID = "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX" //
   クラッシュせず**バナー非表示**にフォールバックし、`CrashReporter.record` で Crashlytics 非致命記録。
   「広告が出ない=収益ゼロ」に気付きにくいので ⑥ の実機確認を必ず行う。詳細 → [admob.md](admob.md)
 
-## ⑤ Crashlytics dSYM アップロード Run Script
+## ⑤ Crashlytics dSYM アップロード — **Run Script 方式は不採用** (この手順は実行しないこと)
+
+> 🚫 **結論: この節の手順は採用していない。実行不要。**
+> dSYM の送信は **fastlane `beta` レーンの `upload_symbols_to_crashlytics`** が担当する
+> (`fastlane/Fastfile` 参照)。理由は本節末尾の「なぜ放棄したか」を読むこと。
+> 以下は「なぜ動かないか」を再検証する人のために記録として残している。
+
+<details>
+<summary>不採用となった Run Script 手順 (記録)</summary>
 
 Target `submil` > **Build Phases** > **+** > **New Run Script Phase** を Compile Sources より後 (末尾) に追加。
 
@@ -118,9 +126,38 @@ $(SRCROOT)/submil/GoogleService-Info.plist
 >    → `-gsp` で明示 **かつ** Input Files に追加する。
 
 - 「Based on dependency analysis」の**チェックを外す** (毎回実行で確実)。
+
+</details>
+
+### なぜ Run Script を放棄したか (2026-07-29 実測)
+
+上記の `-gsp` + Input Files 宣言で**通常ビルドは通る**ようになったが、**archive (= `fastlane beta`) が失敗する**:
+
+```
+error: Unable to load contents of file list: '.../ArchiveIntermediates/SourcePackages/
+       checkouts/firebase-ios-sdk/Crashlytics/CrashlyticsInputFiles.xcfilelist'
+```
+
+`ENABLE_USER_SCRIPT_SANDBOXING = YES` のため SPM checkout 内のファイルは Input 宣言が必須だが、
+そのパスの起点となる `BUILD_DIR` が文脈で変わる:
+
+| 文脈 | `BUILD_DIR` | `SourcePackages` への相対 |
+| --- | --- | --- |
+| 通常ビルド | `<DerivedData>/Build/Products` | `../../SourcePackages` |
+| archive | `<DerivedData>/Build/Intermediates.noindex/ArchiveIntermediates/<target>/BuildProductsPath` | 階層が異なる |
+
+`SourcePackages` 自体は DerivedData 直下の 1 箇所だが、**単一の相対パスで両文脈を満たせない**
+(存在しない側を Input に書くとエラーになるため列挙も不可)。サンドボックスを `NO` にすれば回避できるが、
+ビルドスクリプトの保護を外すことになる。
+
+→ **fastlane 側で送る方式を採用**。`beta` レーンで `upload_symbols_to_crashlytics` を実行し、
+`upload-symbols` のパスは `private_lane :crashlytics_upload_symbols_binary` が
+`~/Library/Developer/Xcode/DerivedData/submil-*/SourcePackages/...` を glob して動的解決する
+(DerivedData 名にハッシュを含むため固定できない)。サンドボックスは有効なまま維持できる。
+
 - Build Settings > **Debug Information Format** = Release は `DWARF with dSYM File` (本プロジェクトは設定済み ✅)。
-- Debug ビルドでは dSYM が無いため `warning: DEBUG_INFORMATION_FORMAT should be set to dwarf-with-dsym`
-  が出るが**正常**(Release では出ない)。
+  ⚠️ **Debug は `dwarf` で dSYM を生成しない**。Crashlytics の受信確認は必ず **Release ビルド**で行うこと
+  (Debug だとレポートは届くが「dSYM 見つからない」でシンボリケートされず可視化されない)。
 - 詳細 → [crashlytics.md](crashlytics.md)
 
 ## ⑥ 検証 (この順で)
@@ -142,7 +179,7 @@ $(SRCROOT)/submil/GoogleService-Info.plist
 - [ ] ② `GoogleService-Info.plist` が `submil/` 配下・ターゲットに含まれる
 - [ ] ③ `GADApplicationIdentifier` (本番) + `SKAdNetworkItems` が Info.plist に入っている
 - [ ] ④ `AdConfig` の production ID 2 つがプレースホルダ (`0000…`) でない
-- [ ] ⑤ dSYM Run Script 追加済み・Release = `DWARF with dSYM File`
+- [x] ⑤ dSYM 送信は fastlane `beta` に集約 (Run Script は**追加しない**)・Release = `DWARF with dSYM File`
 - [ ] ⑥ DebugView 5 イベント / テストクラッシュ受信 / 実機で ATT・バナー確認
 
 ## 関連

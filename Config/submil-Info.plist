@@ -13,9 +13,11 @@
     - GADApplicationIdentifier : 単一文字列だが AdMob 本番アプリ ID と一致させる必要があり手管理
     - SKAdNetworkItems         : 辞書配列のため INFOPLIST_KEY_ 方式では入れられない
 
-  ⚠ リリース前に GADApplicationIdentifier を **AdMob 発行の本番アプリ ID (~付き)** へ差し替えること。
-     併せて submil/Ads/AdConfig.swift の productionApplicationID / productionBannerUnitID も本番値に。
-     下記は Google 公式のテスト用アプリ ID (DEBUG ビルドを即動かすための既定値)。
+  ✅ GADApplicationIdentifier は **AdMob 発行の本番アプリ ID を設定済み** (2026-07-28)。
+     submil/Ads/AdConfig.swift の productionApplicationID と**同じ値を保つこと**
+     (片方だけ変えると Release で広告が出なくなる)。
+     ⚠ テスト用 ID (ca-app-pub-3940256099942544~...) に戻さないこと。DEBUG ビルドは
+     AdConfig.useTestAds が true になり、この plist の値と無関係にテスト広告を読み込む。
 
   SKAdNetworkItems は Google 公式の推奨一覧 (2026-07-28 取得):
     https://developers.google.com/admob/ios/quick-start#update_your_infoplist
