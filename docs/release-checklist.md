@@ -87,10 +87,13 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [x] 🌐 Firebase プロジェクト作成 + iOS アプリ登録(bundle id `com.hikaru.failuremuseum.submil`)
 - [x] 🖥 `GoogleService-Info.plist` を `submil/` 配下に配置(同期グループで自動同梱)
 - [x] 🖥 SPM で `FirebaseAnalytics` + `FirebaseCrashlytics` を追加
-- [ ] 🌐 **Firebase API キー制限** — `submil/GoogleService-Info.plist` は PUBLIC リポにコミットしている。
-      クライアント構成ファイルなので秘密ではないが、含まれる `API_KEY` (`AIzaSy…`) を無制限のままにすると
-      第三者が同 Firebase プロジェクトの API を叩ける。**GCP Console > API とサービス > 認証情報**で
-      該当キーに**アプリケーションの制限 = iOS アプリ (`com.hikaru.failuremuseum.submil`)** を設定すること。
+- [x] 🌐 **Firebase API キー制限** (2026-07-30 設定済み) — `submil/GoogleService-Info.plist` は PUBLIC リポに
+      コミットしている。クライアント構成ファイルなので秘密ではないが、含まれる `API_KEY` (`AIzaSy…`) を
+      無制限のままにすると第三者が同 Firebase プロジェクトの API を叩ける。GCP Console の該当キー
+      **iOS key (auto created by Firebase)** = plist の `API_KEY` に、**アプリケーションの制限 = iOS アプリ**を設定し、
+      許可 bundle ID に `com.hikaru.failuremuseum.submil` と `com.hikaru.failuremuseum.submil.submilWidget` を登録した。
+      - ⚠️ **Browser key (auto created by Firebase)** は制限なしのまま残存。submil に Web アプリはなく plist も
+        このキーを使わないため実害は低いが、未使用の無制限キー。将来は削除 or 制限を検討する。
 - [ ] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認
        (subscription_added / evaluation_completed / cancellation_completed / affiliate_clicked / shared)
 - [x] 🖥 Crashlytics: dSYM アップロードを **fastlane `beta` レーン**に組み込み
