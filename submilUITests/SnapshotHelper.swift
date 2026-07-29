@@ -3,6 +3,13 @@
 //  Example
 //
 //  Created by Felix Krause on 10/8/15.
+//  Copyright (c) 2015 Felix Krause. All rights reserved.
+//
+//  fastlane snapshot 標準ヘルパー (公式配布物をほぼそのまま同梱)。
+//  https://github.com/fastlane/fastlane/blob/master/snapshot/lib/assets/SnapshotHelper.swift
+//  更新は手編集せず `fastlane snapshot update` か、gem 同梱の
+//  `.../fastlane-<version>/snapshot/lib/assets/SnapshotHelper.swift` のコピーで行う。
+//  ただし「simulator 名/出力先が取れないとき」の NSLog だけは意図的に残している (silent failure 防止)。
 //
 
 // -----------------------------------------------------
@@ -174,7 +181,12 @@ open class Snapshot: NSObject {
             let image = screenshot.image
             #endif
 
-            guard var simulator = ProcessInfo().environment["SIMULATOR_DEVICE_NAME"], let screenshotsDir = screenshotsDirectory else { return }
+            guard var simulator = ProcessInfo().environment["SIMULATOR_DEVICE_NAME"], let screenshotsDir = screenshotsDirectory else {
+                // upstream はここで無言 return するが、撮影が 0 枚でも気付けないため
+                // 従来どおり理由をログに残す (このファイルで意図的に upstream と差分を持つ唯一の箇所)。
+                NSLog("Couldn't find simulator name or screenshots directory")
+                return
+            }
 
             do {
                 // The simulator name contains "Clone X of " inside the screenshot file when running parallelized UI Tests on concurrent devices
