@@ -35,7 +35,7 @@ PR 化済み**で、以下は主に **Mac / 各種コンソール操作**が残�
   Run Script から **fastlane `beta` レーンへ移行**した (Run Script 方式は archive で解決不能なため放棄)
 
 **❌ 未着手 (＝本当の残作業)** — Web コンソール / 撮影アップロード が中心
-- 🌐 Firebase DebugView で 5 イベント送信を確認 / 🌐 ASC レコード (#54) / 🌐 各種 Secrets
+- ✅ **審査提出済み (2026-07-30、審査待ち)** / 🌐 CI 用 GitHub Secrets (Mac ローカル運用なら不要・任意)
 - 🌐 撮影済みスクショの ASC 反映 (`upload_screenshots`、ASC API Key 待ち)
 - 🖥 iPad でのバナー高さクリップ確認 (任意) / 本番広告の実配信確認 (公開後)
 
@@ -87,11 +87,14 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 - [x] 🌐 Firebase プロジェクト作成 + iOS アプリ登録(bundle id `com.hikaru.failuremuseum.submil`)
 - [x] 🖥 `GoogleService-Info.plist` を `submil/` 配下に配置(同期グループで自動同梱)
 - [x] 🖥 SPM で `FirebaseAnalytics` + `FirebaseCrashlytics` を追加
-- [ ] 🌐 **Firebase API キー制限** — `submil/GoogleService-Info.plist` は PUBLIC リポにコミットしている。
-      クライアント構成ファイルなので秘密ではないが、含まれる `API_KEY` (`AIzaSy…`) を無制限のままにすると
-      第三者が同 Firebase プロジェクトの API を叩ける。**GCP Console > API とサービス > 認証情報**で
-      該当キーに**アプリケーションの制限 = iOS アプリ (`com.hikaru.failuremuseum.submil`)** を設定すること。
-- [ ] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認
+- [x] 🌐 **Firebase API キー制限** (2026-07-30 設定済み) — `submil/GoogleService-Info.plist` は PUBLIC リポに
+      コミットしている。クライアント構成ファイルなので秘密ではないが、含まれる `API_KEY` (`AIzaSy…`) を
+      無制限のままにすると第三者が同 Firebase プロジェクトの API を叩ける。GCP Console の該当キー
+      **iOS key (auto created by Firebase)** = plist の `API_KEY` に、**アプリケーションの制限 = iOS アプリ**を設定し、
+      許可 bundle ID に `com.hikaru.failuremuseum.submil` と `com.hikaru.failuremuseum.submil.submilWidget` を登録した。
+      - ⚠️ **Browser key (auto created by Firebase)** は制限なしのまま残存。submil に Web アプリはなく plist も
+        このキーを使わないため実害は低いが、未使用の無制限キー。将来は削除 or 制限を検討する。
+- [x] 🖥 DebugView(`-FIRDebugEnabled`)で 5 イベント送信を確認 — **実機で確認済み**
        (subscription_added / evaluation_completed / cancellation_completed / affiliate_clicked / shared)
 - [x] 🖥 Crashlytics: dSYM アップロードを **fastlane `beta` レーン**に組み込み
       (`upload_symbols_to_crashlytics`。`upload-symbols` のパスは SPM checkout から動的解決)
@@ -143,14 +146,21 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
 
 ## 6. App Store Connect 設定 (#54) 🌐 — `app-store-listing.md`
 
-- [ ] 🌐 App レコード作成(bundle id / SKU / プライマリ言語)
-- [ ] 🌐 **サポート URL(必須)** を設定 — ページは公開済み ✅・`fastlane/metadata/ja/support_url.txt`
-      にも設定済み ✅。deliver を使わず手動設定する場合は
-      `https://hikarucode1.github.io/submil-content/support.html` を ASC に入力
-- [ ] 🌐 プライバシーポリシー URL を設定(#52 の Pages URL)
-- [ ] 🌐 カテゴリ(主: ファイナンス / 副: ユーティリティ)、年齢制限レーティング
-- [ ] 🌐 App のプライバシー(データ収集: 使用状況/診断/識別子 = Firebase/AdMob)を申告
-- [ ] 🌐 輸出コンプライアンス(標準暗号のみ = 該当なし想定)
+- [x] 🌐 App レコード作成済み(Apple ID `6795426837` / SKU `submil-1000` / プライマリ言語 日本語)
+- [x] 🌐 **サポート URL** 設定済み — `https://hikarucode1.github.io/submil-content/support.html`
+      (fastlane メタデータ反映済み。version 1.0 の App Store 情報で確認)
+- [x] 🌐 プライバシーポリシー URL 設定済み — `https://hikarucode1.github.io/submil-content/privacy-policy.html`
+- [x] 🌐 カテゴリ(主: ファイナンス / 副: ユーティリティ)設定済み、**年齢制限レーティング = 4+** 設定済み
+      (2026-07-30。7 ステップ質問票を全項目「なし」で回答。広告のみ「はい」= AdMob バナー表示のため)
+- [x] 🌐 App のプライバシー **公開済み**(2026-07-30)— 収集データ 5 種を申告:
+      広告データ / 製品の操作 / デバイス ID(=トラッキング用途)、クラッシュ / パフォーマンスデータ(=アプリ機能)。
+      Firebase Analytics + Crashlytics + AdMob の実態と一致。
+- [x] 🌐 輸出コンプライアンス — `ITSAppUsesNonExemptEncryption = NO`(pbxproj 設定済み)で対応。
+      標準暗号のみのため ASC の暗号化書類アップロードは不要。ビルド提出時に Info.plist 値で自動回答される。
+- [x] 🌐 **EU トレーダーステータス (DSA)** → **EU 非配信で対応**(2026-07-30)。「価格および配信状況」の配信対象から
+      EU 27 か国を除外し **148 か国**に設定。これにより DSA のトレーダー情報登録は不要。
+      非 EU の欧州(英国/スイス/ノルウェー/アイスランド/ウクライナ/トルコ等)は配信対象に残している。
+- [ ] ✍️ 🌐 **著作権 (Copyright)** が version ページで空欄。任意項目だが、事業者名確定(§3)に合わせて入れるか判断。
 
 ## 7. fastlane / CI (#55) — `fastlane.md`
 
@@ -199,6 +209,14 @@ GitHub の "Codex 静的レビュー" は全 PR「マージブロッカー無し
       — カテゴリ(ファイナンス/ユーティリティ)は ASC 設定済み、他はユーザーが ASC で入力済み (2026-07-29)
 - [x] Release ビルドを実機で一通り動作確認(広告表示 / ATT / 各機能)
       — 2026-07-29 iPhone 17e で実施。ATT ✅ / 広告統合 ✅(本番は no fill 待ち)/ Crashlytics ✅ / 主要フロー ✅
+- [x] App Review「サインインが必要です」を**オフ**(ログイン不要アプリのため)(2026-07-30)
+- [x] **App Review 連絡先情報**(姓/名/電話番号/メール)入力済み(2026-07-30、本人入力)
+- [x] 🛠 **iPhone 専用化 + 新ビルド** — universal だと iPad 13" スクショ必須になるため `TARGETED_DEVICE_FAMILY=1`
+      に変更(PR #102)。`fastlane beta` で **ビルド 1.0(2)**(iPhone 専用)を TestFlight にアップロード →
+      version 1.0 の添付を build 1 → **build 2** に差し替え。これで iPad スクショ要件が解消。
+- [x] 🚀 **審査に提出済み**(2026-07-30)— version 1.0 (build 2) を Apple 審査へ送信。ステータス「審査待ち」。
+      審査は最大 48h、結果はメール通知。
+      ⚠️ **PR #102 は要マージ**(提出ビルドは branch から作成。main を提出状態に一致させるため)。
 
 ## 残 GitHub Issue 対応表
 
